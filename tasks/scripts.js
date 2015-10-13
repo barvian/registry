@@ -19,7 +19,6 @@ module.exports = function(config) {
       }))
       .transform(debowerify);
 
-
     var rebundle = function() {
       var pipeline = bundler.bundle()
         .on('error', function(err) { console.error(err); this.emit('end'); })
