@@ -1,0 +1,7 @@
+node_modules
+components
+*.log
+.DS_Store
+.sass-cache
+
+/config.js
