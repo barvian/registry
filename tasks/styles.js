@@ -30,5 +30,5 @@ module.exports = function(config) {
   };
 
   gulp.task('styles', function() { return compile() });
-  gulp.task('styles:watch', function() { compile(true) });
+  gulp.task('styles:watch', function() { gulp.watch(config.all, function() { compile(true) }) });
 };

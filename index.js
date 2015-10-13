@@ -2,18 +2,14 @@
 // --------
 
 var gulp = require('gulp');
+var fs = require('fs');
+var path = require('path');
 
 module.exports = function(config) {
-  require('./tasks/clean')(config.clean);
-  require('./tasks/copy')(config.copy);
-  require('./tasks/fonts')(config.fonts);
-  require('./tasks/images')(config.images);
-  require('./tasks/scripts')(config.scripts);
-  require('./tasks/styles')(config.styles);
-  require('./tasks/sync')(config.sync);
-  require('./tasks/watch')(config);
-  require('./tasks/build');
-  require('./tasks/default');
+  fs.readdirSync(path.join(__dirname, 'tasks')).forEach(function(file) {
+    var task = path.basename(file, path.extname(file));
+    require('./tasks/'+task)(config[task]);
+  });
 
   return gulp.tasks;
 };

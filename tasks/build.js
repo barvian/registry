@@ -1,3 +1,5 @@
 var gulp = require('gulp');
 
-gulp.task('build', ['images','fonts','styles','scripts','copy']);
+module.exports = function(config) {
+  gulp.task('build', ['images','fonts','styles','scripts','copy']);
+};

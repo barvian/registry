@@ -28,13 +28,13 @@ All available configuration options are:
 
   styles: {
     source: `${src}/styles/main.scss`,
+    all: `${src}/styles/**/*.scss`,
     includePaths: [bower.config.directory],
     dest:`${dist}/styles`,
     autoprefixer: {
       browsers: ['> 5%', 'last 2 versions'],
       cascade: false
-    },
-    watchable: `${src}/styles/**/*.scss`
+    }
   },
 
   scripts: {
@@ -71,9 +71,9 @@ All available configuration options are:
     ]
   },
 
-  browserSync: {
+  watch: {
     needsReload: `{content,site}/**/*`,
-    config: {
+    browserSync: {
       notify: true,
       logPrefix: 'Test',
       scrollElementMapping: ['[role="main"]'],

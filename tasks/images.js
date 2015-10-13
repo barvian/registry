@@ -23,5 +23,5 @@ module.exports = function(config) {
   };
 
   gulp.task('images', function() { return process() });
-  gulp.task('images:watch', function() { process(true) });
+  gulp.task('images:watch', function() { gulp.watch(config.source, function() { process(true) }) });
 };
