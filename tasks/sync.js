@@ -1,6 +1,7 @@
-import gulp from 'gulp';
-import rsync from "rsyncwrapper";
-import {sync as config} from '../config';
+var gulp = require('gulp');
+var rsync = require('rsyncwrapper');
 
-gulp.task('deploy', () => {
-});
+module.exports = function(config) {
+  gulp.task('deploy', function() {
+  });
+};

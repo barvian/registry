@@ -1,14 +1,15 @@
-import gulp from 'gulp';
-import {copy as config} from '../config';
-import gulpif from 'gulp-if';
-import browserSync from 'browser-sync';
+var gulp = require('gulp');
+var gulpif = require('gulp-if');
+var browserSync = require('browser-sync');
 
-const copy = watch => {
-  const pipeline = gulp.src(config.source, { base: config.base, dot: true })
-    .pipe(gulp.dest(config.dest))
-    
-  return watch ? pipeline.pipe(browserSync.get('assets').stream()) : pipeline
-};
+module.exports = function(config) {
+  var copy = function(watch) {
+    var pipeline = gulp.src(config.source, { base: config.base, dot: true })
+      .pipe(gulp.dest(config.dest))
 
-gulp.task('copy', () => copy());
-gulp.task('copy:watch', () => copy(true));
+    return watch ? pipeline.pipe(browserSync.get('assets').stream()) : pipeline;
+  };
+
+  gulp.task('copy', function() { return copy() });
+  gulp.task('copy:watch', function() { copy(true) });
+}

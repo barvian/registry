@@ -15,7 +15,7 @@ gulp.tasks = tasks({
 });
 ```
 
-A fully-formed configuration object looks like:
+All available configuration options are:
 
 ```javascript
 {
@@ -65,7 +65,7 @@ A fully-formed configuration object looks like:
   },
 
   clean: {
-    all: [
+    source: [
       '.sass-cache/',
       dist,
     ]

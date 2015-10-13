@@ -1,8 +1,8 @@
-var gulp from 'gulp';
-var del from 'del';
-var {clean as config} from '../config';
+var gulp = require('gulp');
+var del = require('del');
 
-/* Clean the public directory */
-gulp.task('clean', (cb) => {
-  del(config.all, cb);
-});
+module.exports = function(config) {
+  gulp.task('clean', function(cb) {
+    del(config.source, cb);
+  });
+};
