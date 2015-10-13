@@ -27,7 +27,7 @@ All available configuration options are:
   },
 
   styles: {
-    source: `${src}/styles/main.scss`,
+    src: `${src}/styles/main.scss`,
     all: `${src}/styles/**/*.scss`,
     includePaths: [bower.config.directory],
     dest:`${dist}/styles`,
@@ -38,7 +38,7 @@ All available configuration options are:
   },
 
   scripts: {
-    source: `${src}/scripts/main.js`,
+    src: `${src}/scripts/main.js`,
     babelIgnore: new RegExp(`(${bower.config.directory})|(${vendor})`),
     dest: `${dist}/scripts`,
     bundle: 'main',
@@ -46,7 +46,7 @@ All available configuration options are:
 
   copy: {
     base: src,
-    source: [
+    src: [
       `${vendor}/modernizr*.js`
     ],
     dest: dist,
@@ -54,18 +54,18 @@ All available configuration options are:
   },
 
   fonts: {
-    source: `${src}/fonts/**/*`,
+    src: `${src}/fonts/**/*`,
     dest: `${dist}/fonts`
   },
 
   images: {
-    source: `${src}/images/**/*`,
+    src: `${src}/images/**/*`,
     dest: `${dist}/images`,
     watchable: true
   },
 
   clean: {
-    source: [
+    target: [
       '.sass-cache/',
       dist,
     ]

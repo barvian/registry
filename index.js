@@ -8,8 +8,10 @@ var path = require('path');
 module.exports = function(config) {
   fs.readdirSync(path.join(__dirname, 'tasks')).forEach(function(file) {
     var task = path.basename(file, path.extname(file));
-    require('./tasks/'+task)(config[task]);
+    if (config[task]) require('./tasks/'+task)(config[task]);
   });
+  require('./tasks/build');
+  require('./tasks/default');
 
   return gulp.tasks;
 };

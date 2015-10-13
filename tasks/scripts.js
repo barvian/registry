@@ -13,7 +13,7 @@ var browserSync = require('browser-sync');
 
 module.exports = function(config) {
   var compile = function(watch) {
-    var bundler = browserify(config.source, { debug: false })
+    var bundler = browserify(config.src, { debug: false })
       .transform(babelify.configure({
         ignore: config.babelIgnore
       }))

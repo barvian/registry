@@ -8,7 +8,7 @@ var browserSync = require('browser-sync');
 
 module.exports = function(config) {
   var process = function(watch) {
-    var pipeline = gulp.src(config.source)
+    var pipeline = gulp.src(config.src)
       .pipe(changed(config.dest))
       .pipe(imagemin({
         progressive: true,
@@ -23,5 +23,5 @@ module.exports = function(config) {
   };
 
   gulp.task('images', function() { return process() });
-  gulp.task('images:watch', function() { gulp.watch(config.source, function() { process(true) }) });
+  gulp.task('images:watch', function() { gulp.watch(config.src, function() { process(true) }) });
 };

@@ -1,5 +1,3 @@
 var gulp = require('gulp');
 
-module.exports = function(config) {
-  gulp.task('default', ['build','watch']);
-};
+gulp.task('default', ['build','watch']);

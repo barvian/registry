@@ -4,12 +4,12 @@ var browserSync = require('browser-sync');
 
 module.exports = function(config) {
   var copy = function(watch) {
-    var pipeline = gulp.src(config.source, { base: config.base, dot: true })
+    var pipeline = gulp.src(config.src, { base: config.base, dot: true })
       .pipe(gulp.dest(config.dest))
 
     return watch ? pipeline.pipe(browserSync.get('assets').stream()) : pipeline;
   };
 
   gulp.task('copy', function() { return copy() });
-  gulp.task('copy:watch', function() { gulp.watch(config.source, function() { copy(true) }) });
+  gulp.task('copy:watch', function() { gulp.watch(config.src, function() { copy(true) }) });
 }

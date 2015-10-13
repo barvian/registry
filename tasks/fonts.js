@@ -4,7 +4,7 @@ var browserSync = require('browser-sync');
 
 module.exports = function(config) {
   var copy = function(watch) {
-    var pipeline = gulp.src(config.source)
+    var pipeline = gulp.src(config.src)
       .pipe(gulp.dest(config.dest))
       .pipe(size({title: 'fonts'}));
 
@@ -12,5 +12,5 @@ module.exports = function(config) {
   };
 
   gulp.task('fonts', function() { return copy() });
-  gulp.task('fonts:watch', function() { gulp.watch(config.source, function() { copy(true) }) });
+  gulp.task('fonts:watch', function() { gulp.watch(config.src, function() { copy(true) }) });
 };

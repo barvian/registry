@@ -11,7 +11,7 @@ var browserSync = require('browser-sync');
 
 module.exports = function(config) {
   var compile = function(watch) {
-    var pipeline = gulp.src(config.source)
+    var pipeline = gulp.src(config.src)
       .pipe(sourcemaps.init())
       .pipe(sass({
         includePaths: config.includePaths,
