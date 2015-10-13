@@ -1,8 +1,10 @@
 // Gulpfile
 // --------
 
-require('babel/register');
 var gulp = require('gulp');
-var tasks = require('./tasks');
+var requireDir = require('require-dir');
+requireDir('./tasks');
 
-module.exports = gulp.tasks;
+module.exports = function(config) {
+  return gulp.tasks;
+});

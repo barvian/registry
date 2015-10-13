@@ -1,10 +1,9 @@
 import gulp from 'gulp';
-import tasks from '../config';
-import browserSync from 'browser-sync';
+var tasks = require('../config');
+var browserSync = require('browser-sync').create('assets');
 
 gulp.task('watch', () => {
-  const server = browserSync.create('assets');
-  server.init(tasks.browserSync.config);
+  browserSync.init(tasks.browserSync.config);
   gulp.watch(tasks.browserSync.needsReload, server.reload);
 
   Object.keys(tasks).forEach(task => {

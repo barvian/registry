@@ -1,6 +1,6 @@
-import gulp from 'gulp';
-import del from 'del';
-import {clean as config} from '../config';
+var gulp from 'gulp';
+var del from 'del';
+var {clean as config} from '../config';
 
 /* Clean the public directory */
 gulp.task('clean', (cb) => {
