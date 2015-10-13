@@ -1,6 +1,6 @@
-import gulp from 'gulp';
-import size from 'gulp-size';
-import browserSync from 'browser-sync';
+var gulp = require('gulp');
+var size = require('gulp-size');
+var browserSync = require('browser-sync');
 
 module.exports = function(config) {
   var copy = function(watch) {
