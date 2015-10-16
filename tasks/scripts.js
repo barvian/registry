@@ -42,9 +42,9 @@ module.exports = function(config) {
       });
     }
 
-    rebundle();
+    return rebundle();
   }
 
   gulp.task('scripts', function() { return compile() });
-  gulp.task('scripts:watch', function() { compile(true) });
+  gulp.task('scripts:watch', function() { return compile(true) });
 };

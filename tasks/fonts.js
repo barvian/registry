@@ -12,5 +12,5 @@ module.exports = function(config) {
   };
 
   gulp.task('fonts', function() { return copy() });
-  gulp.task('fonts:watch', function() { gulp.watch(config.src, function() { copy(true) }) });
+  gulp.task('fonts:watch', function() { gulp.watch(config.src, function() { return copy(true) }) });
 };

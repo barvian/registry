@@ -11,5 +11,5 @@ module.exports = function(config) {
   };
 
   gulp.task('copy', function() { return copy() });
-  gulp.task('copy:watch', function() { gulp.watch(config.src, function() { copy(true) }) });
+  gulp.task('copy:watch', function() { gulp.watch(config.src, function() { return copy(true) }) });
 }
