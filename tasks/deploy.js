@@ -3,9 +3,10 @@ var rsync = require('rsyncwrapper').rsync;
 
 module.exports = function(config) {
   var r = function(cb, reverse) {
+    var dest = config.username+'@'+config.host+':'+config.dest;
     rsync({
-      src: reverse ? config.dest : config.src,
-      dest: config.username+'@'+config.host+':'+(reverse ? config.src : config.dest),
+      src: reverse ? dest : config.src,
+      dest: reverse ? config.src : dest,
       ssh: true,
       args: ['-azih'],
       dryRun: config.dryRun,
