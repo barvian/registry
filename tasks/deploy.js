@@ -20,6 +20,6 @@ module.exports = function(config) {
     });
   };
 
-  gulp.task('deploy', /*['build'],*/ function(cb) { r(cb) });
+  gulp.task('deploy', ['build'], function(cb) { r(cb) });
   if (config.syncable) gulp.task('sync', function(cb) { r(cb, true) });
 };
