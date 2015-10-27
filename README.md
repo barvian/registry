@@ -19,11 +19,20 @@ All available configuration options are:
 
 ```javascript
 {
-  sync: {
-    user: 'USERNAME',
-    host: 'DOMAIN.TLD',
-    dest: '/path/to/destination/folder/',
-    exclude_list: 'rsync-exclude.txt'
+  deploy: {
+    src: '.',
+    username: prod.username,
+    host: prod.host,
+    dest: prod.root,
+    excludeFirst: [
+      '.DS_Store'
+    ],
+    include: [
+    ],
+    exclude: [
+      '*', // everything not included
+    ],
+    syncable: true
   },
 
   styles: {
@@ -50,7 +59,6 @@ All available configuration options are:
       `${vendor}/modernizr*.js`
     ],
     dest: dist,
-    watchable: true
   },
 
   fonts: {
@@ -61,7 +69,11 @@ All available configuration options are:
   images: {
     src: `${src}/images/**/*`,
     dest: `${dist}/images`,
-    watchable: true
+  },
+
+  sprites: {
+    src: `${src}/sprites/**/*`,
+    dest: dist
   },
 
   clean: {
