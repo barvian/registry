@@ -20,7 +20,9 @@ module.exports = function(config) {
       .pipe(autoprefixer(config.autoprefixer))
       .pipe(pixrem())
       // Concatenate and minify styles
-      .pipe(gulpif('*.css', minifyCSS()))
+      .pipe(gulpif('*.css', minifyCSS({
+        skipMediaMerging: true
+      })))
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(config.dest))
       .pipe(filter('*.css'))
