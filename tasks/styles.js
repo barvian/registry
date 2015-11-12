@@ -21,7 +21,7 @@ module.exports = function(config) {
       .pipe(pixrem())
       // Concatenate and minify styles
       .pipe(gulpif('*.css', minifyCSS({
-        skipMediaMerging: true
+        mediaMerging: true
       })))
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(config.dest))
