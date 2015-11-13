@@ -8,12 +8,14 @@ var gulpif = require('gulp-if');
 var filter = require('gulp-filter');
 var pixrem = require('gulp-pixrem');
 var browserSync = require('browser-sync');
+var jsonImporter = require('node-sass-json-importer');
 
 module.exports = function(config) {
   var compile = function(watch) {
     var pipeline = gulp.src(config.src)
       .pipe(sourcemaps.init())
       .pipe(sass({
+        importer: jsonImporter,
         includePaths: config.includePaths,
         precision: 10
       }).on('error', sass.logError))
