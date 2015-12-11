@@ -1,4 +1,3 @@
-var gulp = require('gulp');
 var sourcemaps = require('gulp-sourcemaps');
 var autoprefixer = require('gulp-autoprefixer');
 var minifyCSS = require('gulp-minify-css');
@@ -9,8 +8,9 @@ var filter = require('gulp-filter');
 var pixrem = require('gulp-pixrem');
 var browserSync = require('browser-sync');
 var jsonImporter = require('node-sass-json-importer');
+var del = require('del');
 
-module.exports = function(config) {
+module.exports = function(gulp, config) {
   var compile = function(watch) {
     var pipeline = gulp.src(config.src)
       .pipe(sourcemaps.init())
@@ -35,4 +35,5 @@ module.exports = function(config) {
 
   gulp.task('styles', function() { return compile() });
   gulp.task('styles:watch', function() { gulp.watch(config.all, function() { return compile(true) }) });
+  gulp.task('styles:clean', function(cb) { del(config.dest, cb); });
 };

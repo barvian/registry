@@ -1,8 +1,13 @@
-var gulp = require('gulp');
 var del = require('del');
 
-module.exports = function(config) {
+module.exports = function(gulp, config) {
   gulp.task('clean', function(cb) {
-    del(config.target, cb);
+    Object.keys(gulp.tasks).forEach(function(task) {
+      if (/\:clean$/.test(task)) {
+        gulp.start(task);
+      }
+    });
+
+    del(config, cb);
   });
 };

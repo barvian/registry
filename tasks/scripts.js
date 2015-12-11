@@ -1,4 +1,3 @@
-var gulp = require('gulp');
 var browserify = require('browserify');
 var watchify = require('watchify');
 var babelify = require('babelify');
@@ -10,8 +9,9 @@ var filter = require('gulp-filter');
 var uglify = require('gulp-uglify');
 var size = require('gulp-size');
 var browserSync = require('browser-sync');
+var del = require('del');
 
-module.exports = function(config) {
+module.exports = function(gulp, config) {
   var compile = function(watch) {
     var bundler = browserify(config.src, { debug: false })
       .transform(babelify.configure({
@@ -47,4 +47,5 @@ module.exports = function(config) {
 
   gulp.task('scripts', function() { return compile() });
   gulp.task('scripts:watch', function() { return compile(true) });
+  gulp.task('scripts:clean', function(cb) { del(config.dest, cb); });
 };

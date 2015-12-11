@@ -1,7 +1,6 @@
-var gulp = require('gulp');
 var browserSync = require('browser-sync').create('assets');
 
-module.exports = function(config) {
+module.exports = function(gulp, config) {
   gulp.task('watch', function() {
     browserSync.init(config.browserSync);
     gulp.watch(config.needsReload, browserSync.reload);

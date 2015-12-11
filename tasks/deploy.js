@@ -1,7 +1,6 @@
-var gulp = require('gulp');
 var rsync = require('rsyncwrapper').rsync;
 
-module.exports = function(config) {
+module.exports = function(gulp, config) {
   var r = function(cb, reverse) {
     var dest = config.username+'@'+config.host+':'+config.dest;
     rsync({
