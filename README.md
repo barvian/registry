@@ -4,13 +4,13 @@ My jumping-off point for all new Gulp projects.
 
 ## Usage
 
-Set up a basic `gulpfile.js` and import all the tasks into it:
+The library will set up its tasks on the Gulp instance you pass it:
 
 ```javascript
 import gulp from'gulp';
-import tasks from 'gulpfile';
+import gulpfile from 'gulpfile';
 
-gulp.tasks = tasks({
+gulpfile(gulp, {
   // config
 });
 ```
@@ -25,19 +25,20 @@ All available configuration options are:
     host: prod.host,
     dest: prod.root,
     excludeFirst: [
-      '.DS_Store'
+      
     ],
-    include: [
+    include: [ // everything not already excluded
+      
     ],
     exclude: [
-      '*', // everything not included
+      '*' // everything not included
     ],
     syncable: true
   },
 
   styles: {
     src: `${src}/styles/main.scss`,
-    all: `${src}/styles/**/*.scss`,
+    all: [`${src}/styles/**/*.scss`, `${src}/variables.json`],
     includePaths: [bower.config.directory],
     dest:`${dist}/styles`,
     autoprefixer: {
@@ -48,7 +49,6 @@ All available configuration options are:
 
   scripts: {
     src: `${src}/scripts/main.js`,
-    babelIgnore: new RegExp(`(${bower.config.directory})|(${vendor})`),
     dest: `${dist}/scripts`,
     bundle: 'main',
   },
@@ -76,15 +76,11 @@ All available configuration options are:
     dest: dist
   },
 
-  clean: {
-    target: [
-      '.sass-cache/',
-      dist,
-    ]
-  },
+  clean: [
+  ],
 
   watch: {
-    needsReload: `{content,site}/**/*`,
+    promptsReload: `{content,site}/**/*`,
     browserSync: {
       notify: true,
       logPrefix: 'Test',
