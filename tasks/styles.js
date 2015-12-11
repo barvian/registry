@@ -11,8 +11,8 @@ var jsonImporter = require('node-sass-json-importer');
 var del = require('del');
 
 module.exports = function(gulp, config) {
-  var compile = function(watch) {
-    var pipeline = gulp.src(config.src)
+  var compile = function() {
+    return gulp.src(config.src)
       .pipe(sourcemaps.init())
       .pipe(sass({
         importer: jsonImporter,
@@ -29,11 +29,9 @@ module.exports = function(gulp, config) {
       .pipe(gulp.dest(config.dest))
       .pipe(filter('*.css'))
       .pipe(size({title: 'styles'}));
-
-    return watch ? pipeline.pipe(browserSync.get('assets').stream()) : pipeline;
   };
 
   gulp.task('styles', function() { return compile() });
-  gulp.task('styles:watch', function() { gulp.watch(config.all, function() { return compile(true) }) });
-  gulp.task('styles:clean', function(cb) { del(config.dest, cb); });
+  gulp.task('styles:watch', function() { gulp.watch(config.all, function() { return compile().pipe(browserSync.get('assets').stream()) }) });
+  gulp.task('styles:clean', function(cb) { del([config.dest, '.sass-cache/'], cb); });
 };

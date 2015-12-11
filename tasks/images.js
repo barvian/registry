@@ -7,8 +7,8 @@ var browserSync = require('browser-sync');
 var del = require('del');
 
 module.exports = function(gulp, config) {
-  var process = function(watch) {
-    var pipeline = gulp.src(config.src)
+  var process = function() {
+    return gulp.src(config.src)
       .pipe(changed(config.dest))
       .pipe(imagemin({
         progressive: true,
@@ -18,11 +18,9 @@ module.exports = function(gulp, config) {
       }))
       .pipe(gulp.dest(config.dest))
       .pipe(size({title: 'images'}));
-
-    return watch ? pipeline.pipe(browserSync.get('assets').stream()) : pipeline
   };
 
   gulp.task('images', function() { return process() });
-  gulp.task('images:watch', function() { gulp.watch(config.src, function() { return process(true) }) });
+  gulp.task('images:watch', function() { gulp.watch(config.src, function() { return process().pipe(browserSync.get('assets').stream()) }) });
   gulp.task('images:clean', function(cb) { del(config.dest, cb); });
 };

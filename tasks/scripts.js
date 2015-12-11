@@ -14,9 +14,7 @@ var del = require('del');
 module.exports = function(gulp, config) {
   var compile = function(watch) {
     var bundler = browserify(config.src, { debug: false })
-      .transform(babelify.configure({
-        ignore: config.babelIgnore
-      }))
+      .transform(babelify)
       .transform(debowerify);
 
     var rebundle = function() {
