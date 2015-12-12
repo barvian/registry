@@ -20,15 +20,16 @@ All available configuration options are:
 ```javascript
 {
   deploy: {
+    type: 'rsync',
     src: '.',
     username: prod.username,
     host: prod.host,
     dest: prod.root,
     excludeFirst: [
-      
+
     ],
     include: [ // everything not already excluded
-      
+
     ],
     exclude: [
       '*' // everything not included
