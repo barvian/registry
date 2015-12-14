@@ -99,3 +99,7 @@ All available configuration options are:
   }
 }
 ```
+
+## Developing
+
+All work happens in `src/`.  Watch and build changes automatically with `npm run watch`.
