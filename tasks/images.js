@@ -5,18 +5,24 @@ var gulpif = require('gulp-if');
 var size = require('gulp-size');
 var browserSync = require('browser-sync');
 var del = require('del');
+var flatten = require('array-flatten');
 
 module.exports = function(gulp, config) {
   var process = function() {
-    return gulp.src(config.src)
-      .pipe(changed(config.dest))
+    var pipeline = gulp.src(config.src)
+      .pipe(changed(flatten([config.dest])[0]))
       .pipe(imagemin({
         progressive: true,
         interlaced: true,
         svgoPlugins: [{removeViewBox: false}],
         use: [pngquant()]
-      }))
-      .pipe(gulp.dest(config.dest))
+      }));
+
+    flatten([config.dest]).forEach(function(dest) {
+      pipeline = pipeline.pipe(gulp.dest(dest));
+    });
+
+    return pipeline
       .pipe(size({title: 'images'}));
   };
 

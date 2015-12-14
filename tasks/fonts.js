@@ -1,11 +1,17 @@
 var size = require('gulp-size');
 var browserSync = require('browser-sync');
 var del = require('del');
+var flatten = require('array-flatten');
 
 module.exports = function(gulp, config) {
   var copy = function() {
-    return gulp.src(config.src)
-      .pipe(gulp.dest(config.dest))
+    var pipeline = gulp.src(config.src);
+
+    flatten([config.dest]).forEach(function(dest) {
+      pipeline = pipeline.pipe(gulp.dest(dest));
+    });
+
+    return pipeline
       .pipe(size({title: 'fonts'}));
   };
 

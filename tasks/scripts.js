@@ -10,6 +10,7 @@ var uglify = require('gulp-uglify');
 var size = require('gulp-size');
 var browserSync = require('browser-sync');
 var del = require('del');
+var flatten = require('array-flatten');
 
 module.exports = function(gulp, config) {
   var compile = function(watch) {
@@ -24,8 +25,13 @@ module.exports = function(gulp, config) {
         .pipe(buffer())
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(uglify({preserveComments: 'some'}))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(config.dest))
+        .pipe(sourcemaps.write('.'));
+
+      flatten([config.dest]).forEach(function(dest) {
+        pipeline = pipeline.pipe(gulp.dest(dest));
+      });
+
+      pipeline = pipeline
         .pipe(filter('*.js'))
         .pipe(size({title: 'scripts'}));
 

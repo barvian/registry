@@ -9,10 +9,11 @@ var pixrem = require('gulp-pixrem');
 var browserSync = require('browser-sync');
 var jsonImporter = require('node-sass-json-importer');
 var del = require('del');
+var flatten = require('array-flatten');
 
 module.exports = function(gulp, config) {
   var compile = function() {
-    return gulp.src(config.src)
+    var pipeline = gulp.src(config.src)
       .pipe(sourcemaps.init())
       .pipe(sass({
         importer: jsonImporter,
@@ -25,8 +26,13 @@ module.exports = function(gulp, config) {
       .pipe(gulpif('*.css', minifyCSS({
         mediaMerging: false
       })))
-      .pipe(sourcemaps.write('.'))
-      .pipe(gulp.dest(config.dest))
+      .pipe(sourcemaps.write('.'));
+
+    flatten([config.dest]).forEach(function(dest) {
+      pipeline = pipeline.pipe(gulp.dest(dest));
+    });
+
+    return pipeline
       .pipe(filter('*.css'))
       .pipe(size({title: 'styles'}));
   };

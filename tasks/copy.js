@@ -1,11 +1,17 @@
 var gulpif = require('gulp-if');
 var browserSync = require('browser-sync');
 var del = require('del');
+var flatten = require('array-flatten');
 
 module.exports = function(gulp, config) {
   var copy = function() {
-    return gulp.src(config.src, { base: config.base, cwd: config.base, dot: true })
-      .pipe(gulp.dest(config.dest))
+    var pipeline = gulp.src(config.src, { base: config.base, cwd: config.base, dot: true });
+
+    flatten([config.dest]).forEach(function(dest) {
+      pipeline = pipeline.pipe(gulp.dest(dest));
+    });
+
+    return pipeline;
   };
 
   gulp.task('copy', function() { return copy() });

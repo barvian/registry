@@ -1,6 +1,6 @@
 {
   "name": "gulpfile",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "author": "mbarvian",
   "main": "index.js",
   "description": "Jumping-off point for all new Gulp projects.",
@@ -23,6 +23,7 @@
     "gulp"
   ],
   "dependencies": {
+    "array-flatten": "^2.0.0",
     "babelify": "^6.3.0",
     "bower": "^1.5.2",
     "browser-sync": "^2.9.11",
