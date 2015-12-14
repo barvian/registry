@@ -1,0 +1,11 @@
+export * as build from './build';
+export * as clean from './clean';
+export * as copy from './copy';
+export * as deploy from './deploy';
+export * as fonts from './fonts';
+export * as images from './images';
+export * as images from './images';
+export * as scripts from './scripts';
+export * as sprites from './sprites';
+export * as styles from './styles';
+export * as watch from './watch';

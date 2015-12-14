@@ -1,7 +1,8 @@
-var rsync = require('rsyncwrapper').rsync;
+import rsyncwrapper from 'rsyncwrapper';
+const {rsync} = rsyncwrapper;
 
-module.exports = function(cb, config, reverse) {
-  var dest = config.username+'@'+config.host+':'+config.dest;
+export function deploy(cb, config, reverse) {
+  const dest = `${config.username}@${config.host}:${config.dest}`;
   rsync({
     src: reverse ? dest : config.src,
     dest: reverse ? config.src : dest,
@@ -17,3 +18,5 @@ module.exports = function(cb, config, reverse) {
     cb();
   });
 };
+
+export default deploy;

@@ -1,12 +1,17 @@
 {
   "name": "gulpfile",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "author": "mbarvian",
-  "main": "index.js",
+  "main": "lib",
   "description": "Jumping-off point for all new Gulp projects.",
   "engines": {
     "node": "0.12.2",
     "npm": "2.7.4"
+  },
+  "scripts": {
+    "compile": "babel --presets es2015,stage-0 src --out-dir lib",
+    "watch": "babel --presets es2015,stage-0 --watch src --out-dir lib",
+    "prepublish": "npm run compile"
   },
   "contributors": [
     {
@@ -31,6 +36,7 @@
     "debowerify": "^1.3.1",
     "del": "^2.0.2",
     "fs": "0.0.2",
+    "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.0.1",
     "gulp-changed": "^1.3.0",
     "gulp-filter": "^3.0.1",
@@ -54,5 +60,9 @@
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.4.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.3.17",
+    "babel-preset-es2015": "^6.3.13"
+  }
 }
