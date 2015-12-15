@@ -53,7 +53,7 @@
     "gulp-uglify": "^1.4.1",
     "imagemin-pngquant": "^4.2.0",
     "jshint-stylish": "^2.0.1",
-    "node-sass-json-importer": "^1.0.3",
+    "node-sass-json-importer": "mbarvian/node-sass-json-importer#quotes",
     "path": "^0.12.7",
     "rsyncwrapper": "^0.4.3",
     "vinyl-buffer": "^1.0.0",
