@@ -11,6 +11,7 @@ import browserSync from 'browser-sync';
 import jsonImporter from 'node-sass-json-importer';
 import del from 'del';
 import flatten from 'array-flatten';
+import path from 'path';
 
 export function process(config) {
   let pipeline = gulp.src(config.src)
@@ -40,7 +41,9 @@ export function process(config) {
 export function load(gulp, config) {
   gulp.task('styles:build', () => process(config));
   gulp.task('styles:watch', () => gulp.watch(config.all, () => process(config).pipe(browserSync.get('assets').stream())));
-  gulp.task('styles:clean', () => del(flatten([config.dest, '.sass-cache/'])));
+
+  const destFile = path.basename(config.src, path.extname(config.src));
+  gulp.task('styles:clean', () => del(flatten([config.dest]).map(dest => `${dest}/${destFile}.css*`).concat(['.sass-cache/'])));
 };
 
 export default process;

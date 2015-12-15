@@ -12,6 +12,7 @@ import size from 'gulp-size';
 import browserSync from 'browser-sync';
 import del from 'del';
 import flatten from 'array-flatten';
+import path from 'path';
 
 export function process(config, watch) {
   let bundler = browserify(config.src, { debug: false })
@@ -21,7 +22,7 @@ export function process(config, watch) {
   const rebundle = function() {
     let pipeline = bundler.bundle()
       .on('error', function(err) { console.error(err); this.emit('end'); })
-      .pipe(source(config.bundle+'.js'))
+      .pipe(source(path.basename(config.src, path.extname(config.src))+'.js'))
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true}))
       .pipe(uglify({preserveComments: 'some'}))
@@ -52,7 +53,9 @@ export function process(config, watch) {
 export function load(gulp, config) {
   gulp.task('scripts:build', () => process(config));
   gulp.task('scripts:watch', () => process(config, true));
-  gulp.task('scripts:clean', () => del(config.dest));
+
+  const destFile = path.basename(config.src, path.extname(config.src));
+  gulp.task('scripts:clean', () => del(flatten([config.dest]).map(dest => `${dest}/${destFile}.js*`)));
 };
 
 export default process;
