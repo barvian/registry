@@ -24,7 +24,7 @@ export function process(config) {
 export function load(gulp, config) {
   gulp.task('sprites:build', () => process(config));
   gulp.task('sprites:watch', () => gulp.watch(config.src, () => process(config).pipe(browserSync.get('assets').stream())));
-  gulp.task('sprites:clean', (cb) => del(`${flatten([config.dest])[0]}/sprites.svg`, cb));
+  gulp.task('sprites:clean', () => del(flatten([config.dest]).map(dest => `${dest}/sprites.svg`)));
 };
 
 export default process;

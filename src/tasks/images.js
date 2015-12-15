@@ -29,7 +29,7 @@ export function process(config) {
 export function load(gulp, config) {
   gulp.task('images:build', () => process(config));
   gulp.task('images:watch', () => gulp.watch(config.src, () => process(config).pipe(browserSync.get('assets').stream())));
-  gulp.task('images:clean', (cb) => del(config.dest, cb));
+  gulp.task('images:clean', () => del(config.dest));
 };
 
 export default process;

@@ -40,7 +40,7 @@ export function process(config) {
 export function load(gulp, config) {
   gulp.task('styles:build', () => process(config));
   gulp.task('styles:watch', () => gulp.watch(config.all, () => process(config).pipe(browserSync.get('assets').stream())));
-  gulp.task('styles:clean', (cb) => del(flatten([config.dest, '.sass-cache/']), cb));
+  gulp.task('styles:clean', () => del(flatten([config.dest, '.sass-cache/'])));
 };
 
 export default process;

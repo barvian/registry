@@ -17,7 +17,7 @@ export function copy(config) {
 export function load(gulp, config) {
   gulp.task('copy:build', () => copy(config));
   gulp.task('copy:watch', () => gulp.watch(config.src, () => copy(config).pipe(browserSync.get('assets').stream())));
-  gulp.task('copy:clean', (cb) => del(config.src, { cwd: flatten([config.dest])[0], dot: true }, cb));
+  gulp.task('copy:clean', () => Promise.all(flatten([config.dest]).map(dest => del(config.src, { cwd: dest, dot: true }))));
 };
 
 export default copy;

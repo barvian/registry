@@ -52,7 +52,7 @@ export function process(config, watch) {
 export function load(gulp, config) {
   gulp.task('scripts:build', () => process(config));
   gulp.task('scripts:watch', () => process(config, true));
-  gulp.task('scripts:clean', (cb) => del(config.dest, cb));
+  gulp.task('scripts:clean', () => del(config.dest));
 };
 
 export default process;

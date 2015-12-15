@@ -18,7 +18,7 @@ export function process(config) {
 export function load(gulp, config) {
   gulp.task('fonts:build', () => process(config));
   gulp.task('fonts:watch', () => gulp.watch(config.src, () => process(config).pipe(browserSync.get('assets').stream())));
-  gulp.task('fonts:clean', (cb) => del(config.dest, cb));
+  gulp.task('fonts:clean', () => del(config.dest));
 };
 
 export default process;
