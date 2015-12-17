@@ -19,6 +19,22 @@ All available configuration options are:
 
 ```javascript
 {
+  browserSync: {
+    watch: `{content,site}/**/*`,
+    notify: true,
+    logPrefix: 'Test',
+    scrollElementMapping: ['[role="main"]'],
+    proxy: 'test.dev',
+    snippetOptions: {
+      rule: {
+        match: /<\/html>/i,
+        fn: function (snippet, match) {
+          return snippet + match;
+        }
+      }
+    }
+  },
+
   deploy: {
     type: 'rsync',
     src: '.',
@@ -51,7 +67,7 @@ All available configuration options are:
   scripts: {
     src: `${src}/scripts/main.js`,
     dest: `${dist}/scripts`,
-    bundle: 'main',
+    bundle: 'main.js',
   },
 
   copy: {
@@ -78,25 +94,7 @@ All available configuration options are:
   },
 
   clean: [
-  ],
-
-  watch: {
-    promptsReload: `{content,site}/**/*`,
-    browserSync: {
-      notify: true,
-      logPrefix: 'Test',
-      scrollElementMapping: ['[role="main"]'],
-      proxy: 'test.dev',
-      snippetOptions: {
-        rule: {
-          match: /<\/html>/i,
-          fn: function (snippet, match) {
-            return snippet + match;
-          }
-        }
-      }
-    }
-  }
+  ]
 }
 ```
 

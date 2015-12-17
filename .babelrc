@@ -1,7 +1,0 @@
-{
-  "ignore": [
-    "lib/"
-  ],
-  "presets": ["es2015", "stage-0"],
-  "retainLines": true
-}

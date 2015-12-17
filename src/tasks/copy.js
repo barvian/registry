@@ -1,6 +1,6 @@
 import gulp from 'gulp';
 import gulpif from 'gulp-if';
-import browserSync from 'browser-sync';
+import browserSync from './browserSync';
 import del from 'del';
 import flatten from 'array-flatten';
 
@@ -15,8 +15,10 @@ export function copy(config) {
 };
 
 export function load(gulp, config) {
+  if (config == null) return;
+
   gulp.task('copy:build', () => copy(config));
-  gulp.task('copy:watch', () => gulp.watch(config.src, () => copy(config).pipe(browserSync.get('assets').stream())));
+  gulp.task('copy:watch', () => gulp.watch(config.src, () => copy(config).pipe(browserSync.stream())));
   gulp.task('copy:clean', () => Promise.all(flatten([config.dest]).map(dest => del(config.src, { cwd: dest, dot: true }))));
 };
 

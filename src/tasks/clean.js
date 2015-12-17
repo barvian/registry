@@ -5,11 +5,12 @@ export function clean(target) {
 }
 
 export function load(gulp, config) {
-  gulp.task('clean', (cb) => {
-    Object.keys(gulp.tasks).filter(task => /\:clean$/.test(task)).forEach(task => gulp.start(task));
-
-    if (config) return clean(config, cb);
-  });
+  gulp.task('clean',
+    Object.keys(gulp.tasks).filter(task => /\:clean$/.test(task)),
+    () => {
+      if (config) return clean(config);
+    }
+  );
 };
 
 export default clean;

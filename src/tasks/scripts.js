@@ -5,14 +5,16 @@ import babelify from 'babelify';
 import debowerify from 'debowerify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
-import sourcemaps from 'gulp-sourcemaps';
 import filter from 'gulp-filter';
+import sourcemaps from 'gulp-sourcemaps';
 import uglify from 'gulp-uglify';
 import size from 'gulp-size';
-import browserSync from 'browser-sync';
+import browserSync from './browserSync';
 import del from 'del';
 import flatten from 'array-flatten';
-import path from 'path';
+import fs from 'fs';
+import gulpif from 'gulp-if';
+import {prod} from '../util/env';
 
 export function process(config, watch) {
   let bundler = browserify(config.src, { debug: false })
@@ -22,10 +24,10 @@ export function process(config, watch) {
   const rebundle = function() {
     let pipeline = bundler.bundle()
       .on('error', function(err) { console.error(err); this.emit('end'); })
-      .pipe(source(path.basename(config.src, path.extname(config.src))+'.js'))
+      .pipe(source(config.bundle))
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true}))
-      .pipe(uglify({preserveComments: 'some'}))
+      .pipe(gulpif(prod(), uglify({preserveComments: 'some'})))
       .pipe(sourcemaps.write('.'));
 
     flatten([config.dest]).forEach(function(dest) {
@@ -36,7 +38,7 @@ export function process(config, watch) {
       .pipe(filter('*.js'))
       .pipe(size({title: 'scripts'}));
 
-    return watch ? pipeline.pipe(browserSync.get('assets').stream()) : pipeline;
+    return watch ? pipeline.pipe(browserSync.stream()) : pipeline;
   }
 
   if (watch) {
@@ -53,9 +55,7 @@ export function process(config, watch) {
 export function load(gulp, config) {
   gulp.task('scripts:build', () => process(config));
   gulp.task('scripts:watch', () => process(config, true));
-
-  const destFile = path.basename(config.src, path.extname(config.src));
-  gulp.task('scripts:clean', () => del(flatten([config.dest]).map(dest => `${dest}/${destFile}.js*`)));
+  gulp.task('scripts:clean', () => del(flatten([config.dest]).map(dest => `${dest}/${config.bundle}*`)));
 };
 
 export default process;

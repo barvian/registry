@@ -2,14 +2,16 @@ import gulp from 'gulp';
 import svgmin from 'gulp-svgmin';
 import svgstore from 'gulp-svgstore';
 import size from 'gulp-size';
-import browserSync from 'browser-sync';
+import browserSync from './browserSync';
 import del from 'del';
 import rename from 'gulp-rename';
 import flatten from 'array-flatten';
+import gulpif from 'gulp-if';
+import {prod} from '../util/env';
 
 export function process(config) {
   let pipeline = gulp.src(config.src)
-    .pipe(svgmin())
+    .pipe(gulpif(prod(), svgmin()))
     .pipe(svgstore())
     .pipe(rename('sprites.svg'));
 
@@ -23,7 +25,7 @@ export function process(config) {
 
 export function load(gulp, config) {
   gulp.task('sprites:build', () => process(config));
-  gulp.task('sprites:watch', () => gulp.watch(config.src, () => process(config).pipe(browserSync.get('assets').stream())));
+  gulp.task('sprites:watch', () => gulp.watch(config.src, () => process(config).pipe(browserSync.stream())));
   gulp.task('sprites:clean', () => del(flatten([config.dest]).map(dest => `${dest}/sprites.svg`)));
 };
 
