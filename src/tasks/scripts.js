@@ -17,12 +17,21 @@ import {prod} from '../util/env';
 
 export const supportedExts = ['js', 'es6'];
 
+export const defaultConfig = {
+  sourcemaps: true,
+  minify: prod(),
+  uglify: {
+    preserveComments: 'some'
+  }
+}
+
 export function process(config) {
+  config = Object.assign(defaultConfig, config);
   let pipeline = gulp.src(config.src)
-    .pipe(gulpif(config.sourcemaps == null && !config.sourcemaps, sourcemaps.init()))
+    .pipe(gulpif(config.sourcemaps, sourcemaps.init()))
     .pipe(babel())
-    .pipe(gulpif(prod(), uglify({preserveComments: 'some'})))
-    .pipe(gulpif(config.sourcemaps == null && !config.sourcemaps, sourcemaps.write('.')));
+    .pipe(gulpif(config.minify, uglify(config.uglify)))
+    .pipe(gulpif(config.sourcemaps, sourcemaps.write('.')));
 
   flatten([config.dest]).forEach(function(dest) {
     pipeline = pipeline.pipe(gulp.dest(dest));
@@ -32,6 +41,7 @@ export function process(config) {
 }
 
 export function processBundle(config, watch) {
+  config = Object.assign(defaultConfig, config);
   let bundler = browserify(config.src, { debug: false })
     .transform(babelify)
     .transform(debowerify);
@@ -44,9 +54,9 @@ export function processBundle(config, watch) {
 
     if (prod()) {
       pipeline = pipeline
-        .pipe(sourcemaps.init())
-        .pipe(uglify({preserveComments: 'some'}))
-        .pipe(sourcemaps.write());
+        .pipe(gulpif(config.sourcemaps, sourcemaps.init()))
+        .pipe(gulpif(config.minify, uglify(config.uglify)))
+        .pipe(gulpif(config.sourcemaps, sourcemaps.write('.')));
     }
 
     flatten([config.dest]).forEach(function(dest) {

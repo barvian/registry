@@ -8,15 +8,21 @@ import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
 
+export const defaultConfig = {
+  minify: prod(),
+  imagemin: {
+    progressive: true,
+    interlaced: true,
+    svgoPlugins: [{removeViewBox: false}],
+    use: [pngquant()]
+  }
+}
+
 export function process(config) {
+  config = Object.assign(defaultConfig, config);
   let pipeline = gulp.src(config.src)
     .pipe(changed(flatten([config.dest])[0]))
-    .pipe(gulpif(prod(), imagemin({
-      progressive: true,
-      interlaced: true,
-      svgoPlugins: [{removeViewBox: false}],
-      use: [pngquant()]
-    })));
+    .pipe(gulpif(config.minify, imagemin(config.imagemin)));
 
   flatten([config.dest]).forEach(function(dest) {
     pipeline = pipeline.pipe(gulp.dest(dest));

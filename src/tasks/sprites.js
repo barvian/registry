@@ -8,11 +8,18 @@ import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
 
+export const defaultConfig = {
+  minify: prod(),
+  bundle: 'sprites.svg',
+  svgmin: {}
+}
+
 export function process(config) {
+  config = Object.assign(defaultConfig, config);
   let pipeline = gulp.src(config.src)
-    .pipe(gulpif(prod(), svgmin()))
+    .pipe(gulpif(config.minify, svgmin(config.svgmin)))
     .pipe(svgstore())
-    .pipe(rename('sprites.svg'));
+    .pipe(rename(config.bundle));
 
   flatten([config.dest]).forEach(function(dest) {
     pipeline = pipeline.pipe(gulp.dest(dest));
@@ -24,7 +31,7 @@ export function process(config) {
 export function load(gulp, config) {
   gulp.task('sprites:build', () => process(config));
   gulp.task('sprites:watch', () => gulp.watch(config.src, () => process(config).pipe(browserSync.stream())));
-  gulp.task('sprites:clean', () => del(flatten([config.dest]).map(dest => `${dest}/sprites.svg`)));
+  gulp.task('sprites:clean', () => del(flatten([config.dest]).map(dest => `${dest}/${config.bundle || defaultConfig.bundle}`)));
 }
 
 export default process;

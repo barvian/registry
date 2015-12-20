@@ -1,5 +1,7 @@
 import gulp from 'gulp';
+import gulpif from 'gulp-if';
 import vulcanize from 'gulp-vulcanize';
+import uglify from 'gulp-uglify';
 import crisper from 'gulp-crisper';
 import babel from 'gulp-babel';
 import browserSync from './browserSync';
@@ -36,7 +38,8 @@ export default function process(config, watch) {
       scriptTask.process({
         src: `${tmp}/**/*.{${scriptTask.supportedExts.join()}}`,
         dest: tmp,
-        sourcemaps: false
+        sourcemaps: false,
+        minify: false // we'll minify at end
       }).on('end', res).on('error', rej)
     })
   ])).then(() => new Promise((res, rej) => {
@@ -46,7 +49,8 @@ export default function process(config, watch) {
         inlineScripts: true,
         inlineCss: true
       }))
-      .pipe(crisper());
+      .pipe(crisper())
+      .pipe(gulpif('*.js', uglify(scriptTask.defaultConfig.uglify)));
 
     flatten([config.dest]).forEach(function(dest) {
       pipeline = pipeline.pipe(gulp.dest(dest));

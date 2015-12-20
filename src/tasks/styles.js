@@ -14,13 +14,23 @@ import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
 
+export const defaultConfig = {
+  modularize: false,
+  minify: prod(),
+  sourcemaps: true,
+  autoprefixer: {
+    browsers: ['> 5%', 'last 2 versions'],
+    cascade: false
+  }
+};
 export const supportedExts = ['sass', 'scss', 'css']
 
 export function process(config) {
+  config = Object.assign(defaultConfig, config);
   const sassFilter = filter(['*.scss', '*.sass'], { restore: true });
 
   let pipeline = gulp.src(config.src)
-    .pipe(gulpif(!config.modularize, sourcemaps.init()))
+    .pipe(gulpif(!config.modularize && config.sourcemaps, sourcemaps.init()))
     .pipe(sassFilter)
     .pipe(sass({
       importer: jsonImporter,
@@ -28,17 +38,14 @@ export function process(config) {
       precision: 10
     }).on('error', sass.logError))
     .pipe(sassFilter.restore)
-    .pipe(autoprefixer(Object.assign({
-      browsers: ['> 5%', 'last 2 versions'],
-      cascade: false
-    }, config.autoprefixer)))
+    .pipe(autoprefixer(config.autoprefixer))
     .pipe(pixrem())
     // Concatenate and minify styles
-    .pipe(gulpif('*.css', prod() ? minifyCSS({
+    .pipe(gulpif('*.css', config.minify ? minifyCSS({
       mediaMerging: false
     }) : noop()))
     .pipe(gulpif(config.modularize, styleMod()))
-    .pipe(gulpif(!config.modularize, sourcemaps.write('.')));
+    .pipe(gulpif(!config.modularize && config.sourcemaps, sourcemaps.write('.')));
 
   flatten([config.dest]).forEach(function(dest) {
     pipeline = pipeline.pipe(gulp.dest(dest));

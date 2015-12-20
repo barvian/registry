@@ -1,5 +1,4 @@
-import rsyncwrapper from 'rsyncwrapper';
-const {rsync} = rsyncwrapper;
+import {rsync} from 'rsyncwrapper';
 
 export function deploy(cb, config, reverse) {
   const dest = `${config.username}@${config.host}:${config.dest}`;
