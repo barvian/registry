@@ -52,6 +52,12 @@ All available configuration options are:
     syncable: true
   },
 
+  elements: {
+    base: `${src}/elements`,
+    entry: 'elements.html',
+    dest: `${dest}/elements`
+  },
+
   styles: {
     src: `${src}/styles/main.scss`,
     all: [`${src}/styles/**/*.scss`, `${src}/variables.json`],

@@ -40,6 +40,7 @@ export default function process(config, watch) {
       }).on('end', res).on('error', rej)
     })
   ])).then(() => new Promise((res, rej) => {
+    // Templates
     let pipeline = gulp.src(`${tmp}/${config.entry}`)
       .pipe(vulcanize({
         inlineScripts: true,
@@ -50,7 +51,7 @@ export default function process(config, watch) {
     flatten([config.dest]).forEach(function(dest) {
       pipeline = pipeline.pipe(gulp.dest(dest));
     });
-    if (watch) pipeline = pipeline.pipe(browserSync.stream())
+    if (watch) pipeline = pipeline.pipe(browserSync.stream());
 
     pipeline.on('end', res).on('error', rej);
   }));
