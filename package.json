@@ -1,9 +1,9 @@
 {
-  "name": "gulpfile",
+  "name": "barvian-tasks",
   "version": "1.7.0",
   "author": "mbarvian",
   "main": "lib",
-  "description": "Jumping-off point for all new Gulp projects.",
+  "description": "Common Gulp tasks.",
   "engines": {
     "node": "0.12.2",
     "npm": "2.7.4"
@@ -21,7 +21,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:mbarvian/gulpfile.js.git"
+    "url": "git@github.com:mbarvian/tasks.git"
   },
   "keywords": [
     "gulpfile",
