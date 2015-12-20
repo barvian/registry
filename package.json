@@ -51,7 +51,7 @@
     "gulp-util": "^3.0.7",
     "gulp-vulcanize": "^6.1.0",
     "imagemin-pngquant": "^4.2.0",
-    "node-sass-json-importer": "mbarvian/node-sass-json-importer#quotes",
+    "node-sass-json-importer": "barvian/node-sass-json-importer#quotes",
     "path": "^0.12.7",
     "rsyncwrapper": "^0.4.3",
     "run-sequence": "^1.1.5",
