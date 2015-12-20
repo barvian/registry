@@ -1,6 +1,6 @@
 {
   "name": "gulpfile",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "author": "mbarvian",
   "main": "lib",
   "description": "Jumping-off point for all new Gulp projects.",

@@ -58,6 +58,6 @@ export default function process(config, watch) {
 
 export function load(gulp, config) {
   gulp.task('elements:build', () => process(config));
-  gulp.task('elements:watch', () => gulp.watch(config.src, () => process(config, true)));
+  gulp.task('elements:watch', () => gulp.watch(`${config.base}/**/*`, () => process(config, true)));
   gulp.task('elements:clean', () => del(flatten([config.dest]).concat(temp(config))));
 }
