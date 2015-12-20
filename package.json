@@ -1,31 +1,27 @@
 {
   "name": "barvian-tasks",
   "version": "1.7.0",
-  "author": "mbarvian",
+  "description": "Common Gulp tasks",
+  "license": "MIT",
+  "repository": "barvian/tasks",
+  "author": {
+    "name": "Maxwell Barvian",
+    "email": "max@barvian.me",
+    "url": "barvian.me"
+  },
   "main": "lib",
-  "description": "Common Gulp tasks.",
   "engines": {
-    "node": "0.12.2",
-    "npm": "2.7.4"
+    "node": ">=0.10.0"
   },
   "scripts": {
     "compile": "babel --presets es2015,stage-0 src --out-dir lib",
     "watch": "babel --presets es2015,stage-0 --watch src --out-dir lib",
     "prepublish": "npm run compile"
   },
-  "contributors": [
-    {
-      "name": "Maxwell Barvian",
-      "email": "max@barvian.me"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:mbarvian/tasks.git"
-  },
   "keywords": [
     "gulpfile",
-    "gulp"
+    "gulp",
+    "tasks"
   ],
   "dependencies": {
     "array-flatten": "^2.0.0",
@@ -67,6 +63,5 @@
     "babel-cli": "^6.3.17",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13"
-  },
-  "license": "MIT"
+  }
 }
