@@ -1,6 +1,12 @@
-# Gulpfile.js
+# Tasks
 
 My jumping-off point for all new Gulp projects.
+
+## Installation
+
+```javascript
+npm install barvian/tasks --save-dev
+```
 
 ## Usage
 
@@ -8,9 +14,9 @@ The library will set up its tasks on the Gulp instance you pass it:
 
 ```javascript
 import gulp from'gulp';
-import gulpfile from 'gulpfile';
+import tasks from 'barvian-tasks';
 
-gulpfile(gulp, {
+tasks(gulp, {
   // config
 });
 ```
