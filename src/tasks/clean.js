@@ -11,6 +11,6 @@ export function load(gulp, config) {
       if (config) return clean(config);
     }
   );
-};
+}
 
 export default clean;

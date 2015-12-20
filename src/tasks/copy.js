@@ -15,8 +15,6 @@ export function copy(config) {
 };
 
 export function load(gulp, config) {
-  if (config == null) return;
-
   gulp.task('copy:build', () => copy(config));
   gulp.task('copy:watch', () => gulp.watch(config.src, () => copy(config).pipe(browserSync.stream())));
   gulp.task('copy:clean', () => Promise.all(flatten([config.dest]).map(dest => del(config.src, { cwd: dest, dot: true }))));

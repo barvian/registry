@@ -8,4 +8,4 @@ export function load(gulp, config) {
   if (config.type === 'rsync' && config.syncable) {
     gulp.task('sync', (cb) => deploys.rsync.deploy(cb, config, true));
   }
-};
+}

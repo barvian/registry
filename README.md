@@ -22,7 +22,6 @@ All available configuration options are:
   browserSync: {
     watch: `{content,site}/**/*`,
     notify: true,
-    logPrefix: 'Test',
     scrollElementMapping: ['[role="main"]'],
     proxy: 'test.dev',
     snippetOptions: {
