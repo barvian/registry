@@ -89,10 +89,6 @@ export function lint(config) {
 
   ensureFiles(requiredLintFiles.map(p => path.join(process.cwd(), p)));
   return gulp.src(config.all)
-    .pipe(browserSync.reload({
-      stream: true,
-      once: true
-    }))
     .pipe(gulpif('*.html', htmlExtract({strip: true})))
     .pipe(jshint())
     .pipe(jscs())
