@@ -7,6 +7,7 @@ export * as deploy from './deploy';
 export * as elements from './elements';
 export * as fonts from './fonts';
 export * as images from './images';
+export * as lint from './lint';
 export * as scripts from './scripts';
 export * as sprites from './sprites';
 export * as styles from './styles';
@@ -18,5 +19,5 @@ export var configurable = [
 ]
 
 export var multi = [
-  'build', 'clean', 'watch', 'df'
+  'build', 'clean', 'lint', 'watch', 'df'
 ]

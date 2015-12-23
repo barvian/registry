@@ -16,7 +16,11 @@ function temp(config) {
   return path.resolve(`${config.base}/../elements.tmp`);
 }
 
-export default function process(config, watch) {
+function all(config) {
+  return `${config.base}/**/*.{js,html}`;
+}
+
+export function compile(config, watch) {
   const tmp = temp(config);
 
   return new Promise((res, rej) => {
@@ -27,7 +31,7 @@ export default function process(config, watch) {
   }).then(() => Promise.all([
     new Promise((res, rej) => {
       // Styles
-      styleTask.process({
+      styleTask.compile({
         src: `${tmp}/**/*.{${styleTask.supportedExts.join()}}`,
         dest: tmp,
         modularize: true
@@ -35,7 +39,7 @@ export default function process(config, watch) {
     }),
     new Promise((res, rej) => {
       // Scripts
-      scriptTask.process({
+      scriptTask.compile({
         src: `${tmp}/**/*.{${scriptTask.supportedExts.join()}}`,
         dest: tmp,
         sourcemaps: false,
@@ -61,8 +65,19 @@ export default function process(config, watch) {
   }));
 }
 
-export function load(gulp, config) {
-  gulp.task('elements:build', () => process(config));
-  gulp.task('elements:watch', () => gulp.watch(`${config.base}/**/*`, () => process(config, true)));
-  gulp.task('elements:clean', () => del(flatten([config.dest]).concat(temp(config))));
+export function lint(config) {
+  return scriptTask.lint({
+    all: all(config)
+  });
 }
+
+export function load(gulp, config) {
+  gulp.task('elements:build', () => compile(config));
+  gulp.task('elements:watch', () => gulp.watch(`${config.base}/**/*`, () => compile(config, true)));
+  gulp.task('elements:clean', () => del(flatten([config.dest]).concat(temp(config))));
+
+  gulp.task('elements:lint', () => lint(config));
+  gulp.task('elements:lint:watch', () => gulp.watch(all(config), () => lint(config)));
+}
+
+export default compile;

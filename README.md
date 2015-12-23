@@ -26,16 +26,14 @@ All available configuration options are:
 ```javascript
 {
   browserSync: {
-    watch: `{content,site}/**/*`,
+    files: `{content,site}/**/*`,
     notify: true,
     scrollElementMapping: ['[role="main"]'],
     proxy: 'test.dev',
     snippetOptions: {
       rule: {
         match: /<\/html>/i,
-        fn: function (snippet, match) {
-          return snippet + match;
-        }
+        fn: (snippet, match) => snippet + match
       }
     }
   },
@@ -77,6 +75,11 @@ All available configuration options are:
 
   scripts: {
     src: `${src}/scripts/main.js`,
+    all: [
+      `${src}/scripts/**/*.js`,
+      `!${src}/${vendor}/**/*`,
+      path.basename(__filename)
+    ],
     dest: `${dist}/scripts`,
     bundle: 'main.js',
   },

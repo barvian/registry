@@ -4,6 +4,10 @@ import uglify from 'gulp-uglify';
 import sourcemaps from 'gulp-sourcemaps';
 import gulpif from 'gulp-if';
 import babel from 'gulp-babel';
+import jshint from 'gulp-jshint';
+import jscs from 'gulp-jscs';
+import jscsStylish from 'gulp-jscs-stylish';
+import htmlExtract from 'gulp-html-extract';
 import browserify from 'browserify';
 import watchify from 'watchify';
 import babelify from 'babelify';
@@ -11,21 +15,22 @@ import debowerify from 'debowerify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import browserSync from './browserSync';
+import path from 'path';
 import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
+import ensureFiles from '../util/ensure-files';
 
 export const supportedExts = ['js', 'es6'];
+export const requiredLintFiles = ['.jscsrc', '.jshintrc', '.bowerrc'];
 
 export const defaultConfig = {
   sourcemaps: true,
   minify: prod(),
-  uglify: {
-    preserveComments: 'some'
-  }
+  uglify: {}
 }
 
-export function process(config) {
+export function compile(config) {
   config = Object.assign(defaultConfig, config);
   let pipeline = gulp.src(config.src)
     .pipe(gulpif(config.sourcemaps, sourcemaps.init()))
@@ -40,7 +45,7 @@ export function process(config) {
   return pipeline;
 }
 
-export function processBundle(config, watch) {
+export function compileBundle(config, watch) {
   config = Object.assign(defaultConfig, config);
   let bundler = browserify(config.src, { debug: false })
     .transform(babelify)
@@ -79,10 +84,30 @@ export function processBundle(config, watch) {
   return rebundle();
 }
 
-export function load(gulp, config) {
-  gulp.task('scripts:build', () => config.bundle ? processBundle(config) : process(config));
-  gulp.task('scripts:watch', () => config.bundle ? processBundle(config, true) : gulp.watch(config.src, () => process(config).pipe(browserSync.stream())));
-  gulp.task('scripts:clean', () => del(flatten([config.dest]).map(dest => config.bundle ? `${dest}/${config.bundle}*` : `${dest}/*.js*`)));
+export function lint(config) {
+  config = Object.assign(defaultConfig, config);
+
+  ensureFiles(requiredLintFiles.map(p => path.join(process.cwd(), p)));
+  return gulp.src(config.all)
+    .pipe(browserSync.reload({
+      stream: true,
+      once: true
+    }))
+    .pipe(gulpif('*.html', htmlExtract({strip: true})))
+    .pipe(jshint())
+    .pipe(jscs())
+    .pipe(jscsStylish.combineWithHintResults())
+    .pipe(jshint.reporter('jshint-stylish'))
+    .pipe(gulpif(!browserSync.active, jshint.reporter('fail')));
 }
 
-export default process;
+export function load(gulp, config) {
+  gulp.task('scripts:build', () => config.bundle ? compileBundle(config) : compile(config));
+  gulp.task('scripts:watch', () => config.bundle ? compileBundle(config, true) : gulp.watch(config.src, () => compile(config).pipe(browserSync.stream())));
+  gulp.task('scripts:clean', () => del(flatten([config.dest]).map(dest => config.bundle ? `${dest}/${config.bundle}*` : `${dest}/*.js*`)));
+
+  gulp.task('scripts:lint', () => lint(config));
+  gulp.task('scripts:lint:watch', () => gulp.watch(config.all, () => lint(config)));
+}
+
+export default compile;

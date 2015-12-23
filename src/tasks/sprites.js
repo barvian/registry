@@ -14,7 +14,7 @@ export const defaultConfig = {
   svgmin: {}
 }
 
-export function process(config) {
+export function combine(config) {
   config = Object.assign(defaultConfig, config);
   let pipeline = gulp.src(config.src)
     .pipe(gulpif(config.minify, svgmin(config.svgmin)))
@@ -29,9 +29,9 @@ export function process(config) {
 }
 
 export function load(gulp, config) {
-  gulp.task('sprites:build', () => process(config));
-  gulp.task('sprites:watch', () => gulp.watch(config.src, () => process(config).pipe(browserSync.stream())));
+  gulp.task('sprites:build', () => combine(config));
+  gulp.task('sprites:watch', () => gulp.watch(config.src, () => combine(config).pipe(browserSync.stream())));
   gulp.task('sprites:clean', () => del(flatten([config.dest]).map(dest => `${dest}/${config.bundle || defaultConfig.bundle}`)));
 }
 
-export default process;
+export default combine;

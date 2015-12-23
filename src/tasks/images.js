@@ -18,7 +18,7 @@ export const defaultConfig = {
   }
 }
 
-export function process(config) {
+export function minify(config) {
   config = Object.assign(defaultConfig, config);
   let pipeline = gulp.src(config.src)
     .pipe(changed(flatten([config.dest])[0]))
@@ -32,9 +32,9 @@ export function process(config) {
 }
 
 export function load(gulp, config) {
-  gulp.task('images:build', () => process(config));
-  gulp.task('images:watch', () => gulp.watch(config.src, () => process(config).pipe(browserSync.stream())));
+  gulp.task('images:build', () => minify(config));
+  gulp.task('images:watch', () => gulp.watch(config.src, () => minify(config).pipe(browserSync.stream())));
   gulp.task('images:clean', () => del(flatten([config.dest])));
 }
 
-export default process;
+export default minify;

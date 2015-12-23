@@ -25,7 +25,7 @@ export const defaultConfig = {
 };
 export const supportedExts = ['sass', 'scss', 'css']
 
-export function process(config) {
+export function compile(config) {
   config = Object.assign(defaultConfig, config);
   const sassFilter = filter(['*.scss', '*.sass'], { restore: true });
 
@@ -55,9 +55,9 @@ export function process(config) {
 }
 
 export function load(gulp, config) {
-  gulp.task('styles:build', () => process(config));
-  gulp.task('styles:watch', () => gulp.watch(config.all, () => process(config).pipe(browserSync.stream())));
+  gulp.task('styles:build', () => compile(config));
+  gulp.task('styles:watch', () => gulp.watch(config.all, () => compile(config).pipe(browserSync.stream())));
   gulp.task('styles:clean', () => del(flatten([config.dest]).concat(['.sass-cache/'])));
 }
 
-export default process;
+export default compile;
