@@ -1,17 +1,18 @@
 import {log} from 'gulp-util';
 import {rsync} from 'rsyncwrapper';
 
-export const defaultConfig = {
-  ssh: true,
-  args: ['-azih']
-}
-
 export function deploy(cb, config, reverse) {
   const dest = `${config.username}@${config.host}:${config.dest}`;
-  rsync(Object.assign(defaultConfig, config, {
+  rsync({
     src: reverse ? dest : config.src,
     dest: reverse ? config.src : dest,
-  }), function(error, stdout, stderr, cmd) {
+    ssh: true,
+    args: ['-azih'],
+    dryRun: config.dryRun,
+    excludeFirst: config.excludeFirst,
+    include: config.include,
+    exclude: config.exclude
+  }, function(error, stdout, stderr, cmd) {
     if (error) return cb(error);
     log(stdout);
     cb();
