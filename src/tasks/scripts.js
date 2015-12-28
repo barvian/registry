@@ -4,8 +4,7 @@ import uglify from 'gulp-uglify';
 import sourcemaps from 'gulp-sourcemaps';
 import gulpif from 'gulp-if';
 import babel from 'gulp-babel';
-import jshint from 'gulp-jshint';
-import jscs from 'gulp-jscs';
+import eslint from 'gulp-eslint';
 import jscsStylish from 'gulp-jscs-stylish';
 import htmlExtract from 'gulp-html-extract';
 import browserify from 'browserify';
@@ -22,7 +21,7 @@ import {prod} from '../util/env';
 import ensureFiles from '../util/ensure-files';
 
 export const supportedExts = ['js', 'es6'];
-export const requiredLintFiles = ['.jscsrc', '.jshintrc', '.bowerrc'];
+export const requiredLintFiles = [/*'.eslintrc'*/];
 
 export const defaultConfig = {
   sourcemaps: true,
@@ -90,11 +89,11 @@ export function lint(config) {
   ensureFiles(requiredLintFiles.map(p => path.join(process.cwd(), p)));
   return gulp.src(config.all)
     .pipe(gulpif('*.html', htmlExtract({strip: true})))
-    .pipe(jshint())
-    .pipe(jscs())
-    .pipe(jscsStylish.combineWithHintResults())
-    .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(gulpif(!browserSync.active, jshint.reporter('fail')));
+    .pipe(eslint({
+      extends: 'google'
+    }))
+    .pipe(eslint.format())
+    .pipe(gulpif(!browserSync.active, eslint.failOnError()));
 }
 
 export function load(gulp, config) {

@@ -1,7 +1,7 @@
 import gulp from 'gulp';
 import sourcemaps from 'gulp-sourcemaps';
 import autoprefixer from 'gulp-autoprefixer';
-import minifyCSS from 'gulp-minify-css';
+import nano from 'gulp-cssnano';
 import sass from 'gulp-sass';
 import gulpif from 'gulp-if';
 import filter from 'gulp-filter';
@@ -41,7 +41,7 @@ export function compile(config) {
     .pipe(autoprefixer(config.autoprefixer))
     .pipe(pixrem())
     // Concatenate and minify styles
-    .pipe(gulpif('*.css', config.minify ? minifyCSS({
+    .pipe(gulpif('*.css', config.minify ? nano({
       mediaMerging: false
     }) : noop()))
     .pipe(gulpif(config.modularize, styleMod()))
