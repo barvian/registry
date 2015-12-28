@@ -90,6 +90,7 @@ export function lint(config) {
   return gulp.src(config.all)
     .pipe(gulpif('*.html', htmlExtract({strip: true})))
     .pipe(eslint({
+      parser: 'babel-eslint',
       extends: 'google'
     }))
     .pipe(eslint.format())

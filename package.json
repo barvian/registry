@@ -25,6 +25,7 @@
   ],
   "dependencies": {
     "array-flatten": "^2.0.0",
+    "babel-eslint": "^4.1.6",
     "babelify": "^7.2.0",
     "bower": "^1.5.2",
     "browser-sync": "^2.9.11",
