@@ -21,7 +21,6 @@ import {prod} from '../util/env';
 import ensureFiles from '../util/ensure-files';
 
 export const supportedExts = ['js', 'es6'];
-export const requiredLintFiles = [/*'.eslintrc'*/];
 
 export const defaultConfig = {
   sourcemaps: true,
@@ -86,7 +85,6 @@ export function compileBundle(config, watch) {
 export function lint(config) {
   config = Object.assign(defaultConfig, config);
 
-  ensureFiles(requiredLintFiles.map(p => path.join(process.cwd(), p)));
   return gulp.src(config.all)
     .pipe(gulpif('*.html', htmlExtract({strip: true})))
     .pipe(eslint({
