@@ -5,7 +5,7 @@ import uglify from 'gulp-uglify';
 import crisper from 'gulp-crisper';
 import babel from 'gulp-babel';
 import browserSync from './browserSync';
-import {test} from 'web-component-tester';
+import {test as wcTest} from 'web-component-tester';
 import path from 'path';
 import del from 'del';
 import flatten from 'array-flatten';
@@ -14,7 +14,7 @@ import * as styleTask from './styles';
 import * as scriptTask from './scripts';
 
 function temp(config) {
-  return path.resolve(`${config.base}/../elements.tmp`);
+  return path.relative(process.cwd(), path.resolve(`${config.base}/../elements.tmp`));
 }
 
 function all(config) {
@@ -72,13 +72,18 @@ export function lint(config) {
   });
 }
 
-export test from 'web-component-tester';
+export function test(config, cb) {
+  wcTest({
+    suites: [`${temp(config)}/**/__tests__/`]
+  }, cb);
+}
+
 
 export function load(gulp, config) {
   gulp.task('elements:build', () => compile(config));
   gulp.task('elements:watch', () => gulp.watch(`${config.base}/**/*`, () => compile(config, true)));
   gulp.task('elements:clean', () => del(flatten([config.dest]).concat(temp(config))));
-  gulp.task('elements:test', (cb) => test({suites: [`${config.base}/**/__tests__/`]}, cb));
+  gulp.task('elements:test', ['elements:build'], (cb) => test(config, cb));
 
   gulp.task('elements:lint', () => lint(config));
   gulp.task('elements:lint:watch', () => gulp.watch(all(config), () => lint(config)));
