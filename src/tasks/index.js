@@ -11,6 +11,7 @@ export * as lint from './lint';
 export * as scripts from './scripts';
 export * as sprites from './sprites';
 export * as styles from './styles';
+export * as test from './test';
 export * as watch from './watch';
 
 export var configurable = [
@@ -18,6 +19,6 @@ export var configurable = [
   'fonts', 'images', 'scripts', 'sprites', 'styles'
 ]
 
-export var multi = [
-  'build', 'clean', 'lint', 'watch', 'df'
+export var convenience = [
+  'build', 'clean', 'lint', 'test', 'watch', 'df'
 ]

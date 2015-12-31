@@ -18,7 +18,6 @@ import path from 'path';
 import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
-import ensureFiles from '../util/ensure-files';
 
 export const supportedExts = ['js', 'es6'];
 

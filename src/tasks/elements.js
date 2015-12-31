@@ -5,6 +5,7 @@ import uglify from 'gulp-uglify';
 import crisper from 'gulp-crisper';
 import babel from 'gulp-babel';
 import browserSync from './browserSync';
+import {test} from 'web-component-tester';
 import path from 'path';
 import del from 'del';
 import flatten from 'array-flatten';
@@ -71,10 +72,13 @@ export function lint(config) {
   });
 }
 
+export test from 'web-component-tester';
+
 export function load(gulp, config) {
   gulp.task('elements:build', () => compile(config));
   gulp.task('elements:watch', () => gulp.watch(`${config.base}/**/*`, () => compile(config, true)));
   gulp.task('elements:clean', () => del(flatten([config.dest]).concat(temp(config))));
+  gulp.task('elements:test', (cb) => test({suites: [`${config.base}/**/__tests__/`]}, cb));
 
   gulp.task('elements:lint', () => lint(config));
   gulp.task('elements:lint:watch', () => gulp.watch(all(config), () => lint(config)));
