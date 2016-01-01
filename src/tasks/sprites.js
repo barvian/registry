@@ -15,7 +15,7 @@ export const defaultConfig = {
 }
 
 export function combine(config) {
-  config = Object.assign(defaultConfig, config);
+  config = Object.assign({}, defaultConfig, config);
   let pipeline = gulp.src(config.src)
     .pipe(gulpif(config.minify, svgmin(config.svgmin)))
     .pipe(svgstore())

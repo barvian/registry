@@ -19,7 +19,7 @@ export const defaultConfig = {
 }
 
 export function minify(config) {
-  config = Object.assign(defaultConfig, config);
+  config = Object.assign({}, defaultConfig, config);
   let pipeline = gulp.src(config.src)
     .pipe(changed(flatten([config.dest])[0]))
     .pipe(gulpif(config.minify, imagemin(config.imagemin)));

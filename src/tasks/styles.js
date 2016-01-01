@@ -25,8 +25,7 @@ export const defaultConfig = {
 export const supportedExts = ['sass', 'scss', 'css']
 
 export function compile(config) {
-  config = Object.assign(defaultConfig, config);
-
+  config = Object.assign({}, defaultConfig, config);
   let pipeline = gulp.src(config.src)
     .pipe(gulpif(!config.modularize && config.sourcemaps, sourcemaps.init()))
     .pipe(gulpif(/\.(sass|scss)$/, sass({
@@ -52,7 +51,7 @@ export function compile(config) {
 
 export function load(gulp, config) {
   gulp.task('styles:build', () => compile(config));
-  gulp.task('styles:watch', () => gulp.watch(config.all, () => compile(config).pipe(browserSync.stream())));
+  gulp.task('styles:watch', () => gulp.watch(config.all, () => compile(config).pipe(gulpif('*.css', browserSync.stream()))));
   gulp.task('styles:clean', () => del(flatten([config.dest]).concat(['.sass-cache/'])));
 }
 

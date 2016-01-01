@@ -31,7 +31,7 @@ export const defaultConfig = {
 }
 
 export function compile(config) {
-  config = Object.assign(defaultConfig, config);
+  config = Object.assign({}, defaultConfig, config);
 
   let pipeline = gulp.src(config.src)
     .pipe(gulpif('*.html', crisper(config.crisper)))
@@ -48,7 +48,7 @@ export function compile(config) {
 }
 
 export function compileBundle(config, watch) {
-  config = Object.assign(defaultConfig, config);
+  config = Object.assign({}, defaultConfig, config);
   let bundler = browserify(config.src, { debug: false })
     .transform(babelify)
     .transform(debowerify);
@@ -72,11 +72,10 @@ export function compileBundle(config, watch) {
 
     pipeline = pipeline;
 
-    return watch ? pipeline.pipe(browserSync.stream()) : pipeline;
+    return watch ? pipeline.pipe(gulpif('*.js', browserSync.stream())) : pipeline;
   }
 
   if (watch) {
-    console.log('watching');
     bundler = watchify(bundler);
     bundler.on('update', function() {
       rebundle();
@@ -87,7 +86,7 @@ export function compileBundle(config, watch) {
 }
 
 export function lint(config) {
-  config = Object.assign(defaultConfig, config);
+  config = Object.assign({}, defaultConfig, config);
 
   return gulp.src(config.all)
     .pipe(gulpif('*.html', htmlExtract({strip: true})))
@@ -101,7 +100,7 @@ export function lint(config) {
 
 export function load(gulp, config) {
   gulp.task('scripts:build', () => config.bundle ? compileBundle(config) : compile(config));
-  gulp.task('scripts:watch', () => config.bundle ? compileBundle(config, true) : gulp.watch(config.src, () => compile(config).pipe(browserSync.stream())));
+  gulp.task('scripts:watch', () => config.bundle ? compileBundle(config, true) : gulp.watch(config.src, () => compile(config).pipe(gulpif('*.js', browserSync.stream()))));
   gulp.task('scripts:clean', () => del(flatten([config.dest]).map(dest => config.bundle ? `${dest}/${config.bundle}*` : `${dest}/*.js*`)));
 
   gulp.task('scripts:lint', () => lint(config));
