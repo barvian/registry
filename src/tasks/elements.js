@@ -39,9 +39,13 @@ export function compile(config, watch) {
       }).on('end', res).on('error', rej);
     }),
     new Promise((res, rej) => {
+      const js = scriptTask.supportedExts.filter(ext => ext !== 'html').join();
       // Scripts
       scriptTask.compile({
-        src: `${tmp}/**/*.{${scriptTask.supportedExts.join()}}`,
+        src: [
+          `${tmp}/**/*.{${js}}`,
+          `${tmp}/**/__tests__/**/*.html`
+        ],
         dest: tmp,
         sourcemaps: false,
         minify: false // we'll minify at end
@@ -74,7 +78,7 @@ export function lint(config) {
 
 export function test(config, cb) {
   wcTest({
-    suites: [`${temp(config)}/**/__tests__/`]
+    suites: [`${temp(config)}/**/__tests__/**/*.html`]
   }, cb);
 }
 

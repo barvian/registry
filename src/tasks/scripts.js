@@ -1,5 +1,4 @@
 import gulp from 'gulp';
-import filter from 'gulp-filter';
 import uglify from 'gulp-uglify';
 import sourcemaps from 'gulp-sourcemaps';
 import gulpif from 'gulp-if';
@@ -7,6 +6,7 @@ import babel from 'gulp-babel';
 import eslint from 'gulp-eslint';
 import jscsStylish from 'gulp-jscs-stylish';
 import htmlExtract from 'gulp-html-extract';
+import crisper from 'gulp-crisper';
 import browserify from 'browserify';
 import watchify from 'watchify';
 import babelify from 'babelify';
@@ -19,19 +19,24 @@ import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
 
-export const supportedExts = ['js', 'es6'];
+export const supportedExts = ['js', 'es6', 'html'];
 
 export const defaultConfig = {
   sourcemaps: true,
   minify: prod(),
-  uglify: {}
+  uglify: {},
+  crisper: {
+    scriptInHead: false
+  }
 }
 
 export function compile(config) {
   config = Object.assign(defaultConfig, config);
+
   let pipeline = gulp.src(config.src)
+    .pipe(gulpif('*.html', crisper(config.crisper)))
     .pipe(gulpif(config.sourcemaps, sourcemaps.init()))
-    .pipe(babel())
+    .pipe(gulpif(/\.(js|es6)$/, babel()))
     .pipe(gulpif(config.minify, uglify(config.uglify)))
     .pipe(gulpif(config.sourcemaps, sourcemaps.write('.')));
 

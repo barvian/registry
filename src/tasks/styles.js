@@ -4,7 +4,6 @@ import autoprefixer from 'gulp-autoprefixer';
 import nano from 'gulp-cssnano';
 import sass from 'gulp-sass';
 import gulpif from 'gulp-if';
-import filter from 'gulp-filter';
 import pixrem from 'gulp-pixrem';
 import styleMod from 'gulp-style-modules';
 import {noop} from 'gulp-util';
@@ -27,17 +26,14 @@ export const supportedExts = ['sass', 'scss', 'css']
 
 export function compile(config) {
   config = Object.assign(defaultConfig, config);
-  const sassFilter = filter(['*.scss', '*.sass'], { restore: true });
 
   let pipeline = gulp.src(config.src)
     .pipe(gulpif(!config.modularize && config.sourcemaps, sourcemaps.init()))
-    .pipe(sassFilter)
-    .pipe(sass({
+    .pipe(gulpif(/\.(sass|scss)$/, sass({
       importer: jsonImporter,
       includePaths: config.includePaths,
       precision: 10
-    }).on('error', sass.logError))
-    .pipe(sassFilter.restore)
+    }).on('error', sass.logError)))
     .pipe(autoprefixer(config.autoprefixer))
     .pipe(pixrem())
     // Concatenate and minify styles
