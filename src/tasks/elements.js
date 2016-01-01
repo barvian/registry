@@ -85,7 +85,7 @@ export function test(config, cb) {
 
 export function load(gulp, config) {
   gulp.task('elements:build', () => compile(config));
-  gulp.task('elements:watch', () => gulp.watch(`${config.base}/**/*`, () => compile(config, true)));
+  gulp.task('elements:watch', () => gulp.watch([`${config.base}/**/*`, `!${config.base}/**/__test__/**/*`], () => compile(config, true)));
   gulp.task('elements:clean', () => del(flatten([config.dest]).concat(temp(config))));
   gulp.task('elements:test', ['elements:build'], (cb) => test(config, cb));
 
