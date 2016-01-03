@@ -1,13 +1,22 @@
-import browserSync from './browserSync';
-import _runSequence from 'run-sequence';
+import gulp from 'gulp';
 
-export function load(gulp, config) {
-  const runSequence = _runSequence.use(gulp),
-    watchTasks = Object.keys(gulp.tasks).filter(task => /\:watch$/.test(task));
+// Watch
+// =====
 
-  if (gulp.hasTask('browserSync:create') && !browserSync.active) {
-    gulp.task('watch', (cb) => runSequence('browserSync:create', watchTasks, cb));
+function watch(done) {
+  let watchTasks = this.gulp.parallel(
+    ...Object.keys(this.tasks()).filter(task => /\:watch$/.test(task))
+  );
+  if ('browserSync:init' in this.tasks()) {
+    this.gulp.series(
+      'browserSync:init',
+      watchTasks
+    )(done);
   } else {
-    gulp.task('watch', watchTasks);
+    watchTasks(done);
   }
-}
+};
+watch.displayName = 'watch';
+watch.description = 'Run all watch tasks';
+
+export {watch as default};

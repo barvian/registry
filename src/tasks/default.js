@@ -1,3 +1,15 @@
-export function load(gulp, config) {
-  gulp.task('default', ['lint', 'build', 'watch']);
-}
+import gulp from 'gulp';
+
+// Default
+// =======
+
+function df(done) {
+  this.gulp.series(
+    'build',
+    'watch'
+  )(done);
+};
+df.displayName = 'default';
+df.description = 'Build and watch for changes';
+
+export {df as default};

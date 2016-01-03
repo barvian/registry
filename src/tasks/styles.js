@@ -1,4 +1,6 @@
 import gulp from 'gulp';
+import {stream} from './browserSync';
+import multidest from '../util/gulp-multidest';
 import sourcemaps from 'gulp-sourcemaps';
 import autoprefixer from 'gulp-autoprefixer';
 import nano from 'gulp-cssnano';
@@ -7,12 +9,16 @@ import gulpif from 'gulp-if';
 import pixrem from 'gulp-pixrem';
 import styleMod from 'gulp-style-modules';
 import {noop} from 'gulp-util';
-import browserSync from './browserSync';
 import jsonImporter from 'node-sass-json-importer';
 import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
 
+// Styles
+// ======
+
+export const configurable = true;
+export const supportedExts = ['sass', 'scss', 'css'];
 export const defaultConfig = {
   modularize: false,
   minify: prod(),
@@ -20,13 +26,17 @@ export const defaultConfig = {
   autoprefixer: {
     browsers: ['> 5%', 'last 2 versions'],
     cascade: false
-  }
+  },
+  nano: {}
 };
-export const supportedExts = ['sass', 'scss', 'css']
 
-export function compile(config) {
-  config = Object.assign({}, defaultConfig, config);
-  let pipeline = gulp.src(config.src)
+// Build
+// -----
+
+function build() {
+  let config = Object.assign({}, defaultConfig, this);
+
+  return gulp.src(config.src)
     .pipe(gulpif(!config.modularize && config.sourcemaps, sourcemaps.init()))
     .pipe(gulpif(/\.(sass|scss)$/, sass({
       importer: jsonImporter,
@@ -36,23 +46,41 @@ export function compile(config) {
     .pipe(autoprefixer(config.autoprefixer))
     .pipe(pixrem())
     // Concatenate and minify styles
-    .pipe(gulpif('*.css', config.minify ? nano({
-      mediaMerging: false
-    }) : noop()))
+    .pipe(gulpif('*.css', config.minify ? nano(config.nano) : noop()))
     .pipe(gulpif(config.modularize, styleMod()))
-    .pipe(gulpif(!config.modularize && config.sourcemaps, sourcemaps.write('.')));
-
-  flatten([config.dest]).forEach(function(dest) {
-    pipeline = pipeline.pipe(gulp.dest(dest));
-  });
-
-  return pipeline;
+    .pipe(gulpif(!config.modularize && config.sourcemaps, sourcemaps.write('.')))
+    .pipe(multidest(config.dest))
+    .pipe(gulpif('*.css', stream()));
 }
+build.displayName = 'styles:build';
+build.description = 'Build styles';
 
-export function load(gulp, config) {
-  gulp.task('styles:build', () => compile(config));
-  gulp.task('styles:watch', () => gulp.watch(config.all, () => compile(config).pipe(gulpif('*.css', browserSync.stream()))));
-  gulp.task('styles:clean', () => del(flatten([config.dest]).concat(['.sass-cache/'])));
+export {build};
+
+
+// Watch
+// -----
+
+function watch() {
+  let config = Object.assign({}, defaultConfig, this);
+
+  gulp.watch(config.all, build.bind(this));
 }
+watch.displayName = 'styles:watch';
+watch.description = 'Watch styles for changes and re-build';
 
-export default compile;
+export {watch};
+
+// Clean
+// -----
+
+function clean() {
+  let config = Object.assign({}, defaultConfig, this);
+
+  return del(flatten([config.dest]).concat(['.sass-cache/']));
+}
+clean.displayName = 'styles:clean';
+clean.description = 'Clean styles';
+
+export {clean};
+

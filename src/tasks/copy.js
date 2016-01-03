@@ -1,23 +1,63 @@
 import gulp from 'gulp';
+import multidest from '../util/gulp-multidest';
 import gulpif from 'gulp-if';
-import browserSync from './browserSync';
+import {stream} from './browserSync';
 import del from 'del';
 import flatten from 'array-flatten';
 
-export function copy(config) {
-  let pipeline = gulp.src(config.src, { base: config.base, cwd: config.base, dot: true });
+// Copy
+// ====
 
-  flatten([config.dest]).forEach(function(dest) {
-    pipeline = pipeline.pipe(gulp.dest(dest));
-  });
+export const configurable = true;
+export const defaultConfig = {};
 
-  return pipeline;
-};
+// Build
+// -----
 
-export function load(gulp, config) {
-  gulp.task('copy:build', () => copy(config));
-  gulp.task('copy:watch', () => gulp.watch(config.src, () => copy(config).pipe(browserSync.stream())));
-  gulp.task('copy:clean', () => Promise.all(flatten([config.dest]).map(dest => del(config.src, { cwd: dest, dot: true }))));
-};
+function build() {
+  let config = Object.assign({}, defaultConfig, this);
 
-export default copy;
+  return gulp.src(
+    config.src, {
+      base: config.base,
+      cwd: config.base,
+      dot: true/*,
+      since: gulp.lastRun('copy:build')*/
+    })
+    .pipe(multidest(config.dest))
+    .pipe(stream());
+}
+build.displayName = 'copy:build';
+build.description = 'Build copies';
+
+export {build};
+
+
+// Watch
+// -----
+
+function watch() {
+  let config = Object.assign({}, defaultConfig, this);
+
+  gulp.watch(config.src, build.bind(this));
+}
+watch.displayName = 'copy:watch';
+watch.description = 'Watch fonts for changes and re-build';
+
+export {watch};
+
+// Clean
+// -----
+
+function clean() {
+  let config = Object.assign({}, defaultConfig, this);
+
+  return Promise.all(
+    flatten([config.dest])
+      .map(dest => del(config.src, { cwd: dest, dot: true }))
+  );
+}
+clean.displayName = 'copy:clean';
+clean.description = 'Clean copies';
+
+export {clean};

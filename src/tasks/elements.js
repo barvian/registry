@@ -1,4 +1,6 @@
 import gulp from 'gulp';
+import {stream} from './browserSync';
+import multidest from '../util/gulp-multidest';
 import gulpif from 'gulp-if';
 import vulcanize from 'gulp-vulcanize';
 import uglify from 'gulp-uglify';
@@ -10,38 +12,55 @@ import path from 'path';
 import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
-import * as styleTask from './styles';
-import * as scriptTask from './scripts';
+import * as styles from './styles';
+import * as scripts from './scripts';
 
-function temp(config) {
-  return path.relative(process.cwd(), path.resolve(`${config.base}/../elements.tmp`));
+// Elements
+// ========
+
+export const configurable = true;
+export const defaultConfig = {};
+
+const temp = (config) => path.relative(process.cwd(), path.resolve(`${config.base}/../elements.tmp`));
+const all = (config) => `${config.base}/**/*.{js,html}`;
+
+// Lint
+// ----
+
+function lint() {
+  let config = Object.assign({}, defaultConfig, this);
+
+  return scripts.lint.call({
+    all: all(config)
+  });
 }
+lint.displayName = 'elements:lint';
+lint.description = 'Lint elements';
 
-function all(config) {
-  return `${config.base}/**/*.{js,html}`;
-}
+export {lint};
 
-export function compile(config, watch) {
-  const tmp = temp(config);
+// Build
+// -----
 
-  return new Promise((res, rej) => {
-    // Copy
-    gulp.src(`${config.base}/**/*`)
-      .pipe(gulp.dest(tmp))
-      .on('end', res).on('error', rej);
-  }).then(() => Promise.all([
-    new Promise((res, rej) => {
+function build(done) {
+  let config = Object.assign({}, defaultConfig, this);
+  const tmp = temp(config),
+    js = scripts.supportedExts.filter(ext => ext !== 'html').join();
+
+  gulp.series(
+    // Create temporary working directory
+    () => gulp.src(`${config.base}/**/*`)
+      .pipe(gulp.dest(tmp)),
+    gulp.parallel(
       // Styles
-      styleTask.compile({
-        src: `${tmp}/**/*.{${styleTask.supportedExts.join()}}`,
+      styles.build.bind({
+        src: `${tmp}/**/*.{${styles.supportedExts.join()}}`,
         dest: tmp,
         modularize: true
-      }).on('end', res).on('error', rej);
-    }),
-    new Promise((res, rej) => {
-      const js = scriptTask.supportedExts.filter(ext => ext !== 'html').join();
+      }),
       // Scripts
-      scriptTask.compile({
+      scripts.build.bind({
+        all: all(config),
         src: [
           `${tmp}/**/*.{${js}}`,
           `${tmp}/**/__tests__/**/*.html`
@@ -49,48 +68,67 @@ export function compile(config, watch) {
         dest: tmp,
         sourcemaps: false,
         minify: false // we'll minify at end
-      }).on('end', res).on('error', rej)
-    })
-  ])).then(() => new Promise((res, rej) => {
+      })
+    ),
     // Templates
-    let pipeline = gulp.src(`${tmp}/${config.entry}`)
+    () => gulp.src(`${tmp}/${config.entry}`)
       .pipe(vulcanize({
         inlineScripts: true,
         inlineCss: true
       }))
       .pipe(crisper())
-      .pipe(gulpif('*.js', uglify(scriptTask.defaultConfig.uglify)));
-
-    flatten([config.dest]).forEach(function(dest) {
-      pipeline = pipeline.pipe(gulp.dest(dest));
-    });
-    if (watch) pipeline = pipeline.pipe(browserSync.stream());
-
-    pipeline.on('end', res).on('error', rej);
-  }));
+      .pipe(gulpif('*.js', uglify(scripts.defaultConfig.uglify)))
+      .pipe(multidest(config.dest))
+      .pipe(stream())
+  )(done);
 }
+build.displayName = 'elements:build';
+build.description = 'Build elements';
 
-export function lint(config) {
-  return scriptTask.lint({
-    all: all(config)
-  });
+export {build};
+
+
+// Watch
+// -----
+
+function watch() {
+  let config = Object.assign({}, defaultConfig, this);
+
+  gulp.watch([`${config.base}/**/*`, `!${config.base}/**/__tests__/**/*`], build.bind(this));
 }
+watch.displayName = 'elements:watch';
+watch.description = 'Watch elements for changes and re-build';
 
-export function test(config, cb) {
-  wcTest({
-    suites: [`${temp(config)}/**/__tests__/**/*.html`]
-  }, cb);
+export {watch};
+
+// Clean
+// -----
+
+function clean() {
+  let config = Object.assign({}, defaultConfig, this);
+
+  return del(flatten([config.dest]).concat(temp(config)));
 }
+clean.displayName = 'elements:clean';
+clean.description = 'Clean elements';
+
+export {clean};
 
 
-export function load(gulp, config) {
-  gulp.task('elements:build', () => compile(config));
-  gulp.task('elements:watch', () => gulp.watch([`${config.base}/**/*`, `!${config.base}/**/__tests__/**/*`], () => compile(config, true)));
-  gulp.task('elements:clean', () => del(flatten([config.dest]).concat(temp(config))));
-  gulp.task('elements:test', ['elements:build'], (cb) => test(config, cb));
+// Test
+// ----
 
-  gulp.task('elements:lint', () => lint(config));
-  gulp.task('elements:lint:watch', () => gulp.watch(all(config), () => lint(config)));
+function test(done) {
+  let config = Object.assign({}, defaultConfig, this);
+
+  gulp.series(
+    build.bind(this),
+    (cb) => wcTest({
+      suites: [`${temp(config)}/**/__tests__/**/*.html`]
+    }, cb)
+  )(done);
 }
+test.displayName = 'elements:test';
+test.description = 'Test elements';
 
-export default compile;
+export {test};

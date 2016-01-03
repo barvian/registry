@@ -1,16 +1,17 @@
+import gulp from 'gulp';
 import del from 'del';
 
-export function clean(target) {
-  return del(target);
-}
+// Clean
+// =====
 
-export function load(gulp, config) {
-  gulp.task('clean',
-    Object.keys(gulp.tasks).filter(task => /\:clean$/.test(task)),
-    () => {
-      if (config) return clean(config);
-    }
-  );
-}
+function clean(done) {
+  this.gulp.parallel(
+    () => del(this.config.clean),
+    ...Object.keys(this.tasks()).filter(task => /\:clean$/.test(task))
+  )(done);
+};
+clean.displayName = 'clean';
+clean.description = 'Run all clean tasks';
 
-export default clean;
+export {clean as default};
+

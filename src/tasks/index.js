@@ -13,12 +13,3 @@ export * as sprites from './sprites';
 export * as styles from './styles';
 export * as test from './test';
 export * as watch from './watch';
-
-export var configurable = [
-  'browserSync', 'copy', 'deploy', 'elements',
-  'fonts', 'images', 'scripts', 'sprites', 'styles'
-]
-
-export var convenience = [
-  'build', 'clean', 'lint', 'test', 'watch', 'df'
-]
