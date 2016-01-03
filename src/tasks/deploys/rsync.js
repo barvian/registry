@@ -1,7 +1,7 @@
 import {log} from 'gulp-util';
 import {rsync} from 'rsyncwrapper';
 
-export function deploy(cb, config, reverse) {
+export function deploy(done, config, reverse) {
   const dest = `${config.username}@${config.host}:${config.dest}`;
   rsync({
     src: reverse ? dest : config.src,
@@ -13,9 +13,9 @@ export function deploy(cb, config, reverse) {
     include: config.include,
     exclude: config.exclude
   }, function(error, stdout, stderr, cmd) {
-    if (error) return cb(error);
+    if (error) return done(error);
     log(stdout);
-    cb();
+    done();
   });
 };
 

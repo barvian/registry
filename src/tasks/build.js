@@ -1,5 +1,15 @@
-export function load(gulp, config) {
-  gulp.task('build',
-    Object.keys(gulp.tasks).filter(task => /\:build$/.test(task))
-  );
-}
+import gulp from 'gulp';
+
+// Build
+// =====
+
+function build(done) {
+  this.gulp.parallel(
+    ...Object.keys(this.tasks()).filter(task => /\:build$/.test(task))
+  )(done);
+};
+build.displayName = 'build';
+build.description = 'Run all build tasks';
+
+export {build as default};
+

@@ -1,22 +1,53 @@
 import gulp from 'gulp';
-import browserSync from './browserSync';
+import {stream} from './browserSync';
+import multidest from '../util/gulp-multidest';
 import del from 'del';
 import flatten from 'array-flatten';
 
-export function minify(config) {
-  let pipeline = gulp.src(config.src);
+// Fonts
+// =====
 
-  flatten([config.dest]).forEach(function(dest) {
-    pipeline = pipeline.pipe(gulp.dest(dest));
-  });
+export const configurable = true;
+export const defaultConfig = {};
 
-  return pipeline;
+// Build
+// -----
+
+function build() {
+  let config = Object.assign({}, defaultConfig, this);
+
+  return gulp.src(config.src/*, {since: gulp.lastRun('fonts:build')}*/)
+    .pipe(multidest(config.dest))
+    .pipe(stream());
 }
+build.displayName = 'fonts:build';
+build.description = 'Build fonts';
 
-export function load(gulp, config) {
-  gulp.task('fonts:build', () => minify(config));
-  gulp.task('fonts:watch', () => gulp.watch(config.src, () => minify(config).pipe(browserSync.stream())));
-  gulp.task('fonts:clean', () => del(flatten([config.dest])));
+export {build};
+
+
+// Watch
+// -----
+
+function watch() {
+  let config = Object.assign({}, defaultConfig, this);
+
+  gulp.watch(config.src, build.bind(this));
 }
+watch.displayName = 'fonts:watch';
+watch.description = 'Watch fonts for changes and re-build';
 
-export default minify;
+export {watch};
+
+// Clean
+// -----
+
+function clean() {
+  let config = Object.assign({}, defaultConfig, this);
+
+  return del(flatten([config.dest]));
+}
+clean.displayName = 'fonts:clean';
+clean.description = 'Clean fonts';
+
+export {clean};

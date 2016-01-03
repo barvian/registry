@@ -1,11 +1,36 @@
+import gulp from 'gulp';
+import assert from 'assert';
 import * as deploys from './deploys';
 
-export function load(gulp, config) {
-  gulp.task('deploy', ['build'], (cb) => {
-    deploys[config.type].deploy(cb, config);
-  });
+// Deploy
+// ======
 
-  if (config.type === 'rsync' && config.syncable) {
-    gulp.task('sync', (cb) => deploys.rsync.deploy(cb, config, true));
-  }
-}
+export const configurable = true;
+
+function deploy(done) {
+  gulp.series(
+    'build',
+    (cb) => {
+      let {type, syncable, ...config} = this;
+      deploys[type].deploy(cb, config);
+    }
+  )(done);
+};
+deploy.displayName = 'deploy';
+deploy.description = 'Deploy site';
+
+export {deploy};
+
+// Sync
+// ====
+
+function sync(done) {
+  let {type, syncable, ...config} = this;
+  deploys[type].deploy(done, config, true);
+};
+sync.enabled = function() { return this.type === 'rsync' && this.syncable; }
+sync.displayName = 'sync';
+sync.description = 'Sync files from server';
+
+export {sync};
+

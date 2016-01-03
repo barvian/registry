@@ -5,20 +5,20 @@ My jumping-off point for all new Gulp projects.
 ## Installation
 
 ```javascript
-npm install barvian/tasks --save-dev
+npm install barvian/registry --save-dev
 ```
 
 ## Usage
 
-The library will set up its tasks on the Gulp instance you pass it:
+Add the registry to an existing Gulp instance, passing in task configurations. To disable certain tasks, simply omit them from configuration.
 
 ```javascript
 import gulp from'gulp';
-import tasks from 'barvian-tasks';
+import tasks from 'barvian-registry';
 
-tasks(gulp, {
+gulp.registry(new BarvianRegistry({
   // config
-});
+}));
 ```
 
 All available configuration options are:
