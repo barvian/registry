@@ -12,4 +12,3 @@ lint.displayName = 'lint';
 lint.description = 'Run all lint tasks';
 
 export {lint as default};
-

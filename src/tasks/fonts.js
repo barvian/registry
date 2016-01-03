@@ -25,7 +25,6 @@ build.description = 'Build fonts';
 
 export {build};
 
-
 // Watch
 // -----
 

@@ -33,4 +33,3 @@ sync.displayName = 'sync';
 sync.description = 'Sync files from server';
 
 export {sync};
-

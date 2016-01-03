@@ -57,7 +57,6 @@ build.description = 'Build styles';
 
 export {build};
 
-
 // Watch
 // -----
 
@@ -83,4 +82,3 @@ clean.displayName = 'styles:clean';
 clean.description = 'Clean styles';
 
 export {clean};
-

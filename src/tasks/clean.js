@@ -14,4 +14,3 @@ clean.displayName = 'clean';
 clean.description = 'Run all clean tasks';
 
 export {clean as default};
-

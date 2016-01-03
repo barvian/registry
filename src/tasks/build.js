@@ -12,4 +12,3 @@ build.displayName = 'build';
 build.description = 'Run all build tasks';
 
 export {build as default};
-

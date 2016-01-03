@@ -37,7 +37,6 @@ build.description = 'Build sprites';
 
 export {build};
 
-
 // Watch
 // -----
 
@@ -50,7 +49,6 @@ watch.displayName = 'sprites:watch';
 watch.description = 'Watch sprites for changes and re-build';
 
 export {watch};
-
 
 // Clean
 // -----

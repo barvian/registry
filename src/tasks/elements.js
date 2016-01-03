@@ -87,7 +87,6 @@ build.description = 'Build elements';
 
 export {build};
 
-
 // Watch
 // -----
 
@@ -113,7 +112,6 @@ clean.displayName = 'elements:clean';
 clean.description = 'Clean elements';
 
 export {clean};
-
 
 // Test
 // ----

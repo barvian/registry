@@ -12,4 +12,3 @@ test.displayName = 'test';
 test.description = 'Run all test tasks';
 
 export {test as default};
-

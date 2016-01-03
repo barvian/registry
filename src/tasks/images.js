@@ -38,7 +38,6 @@ build.description = 'Compress images';
 
 export {build};
 
-
 // Watch
 // -----
 

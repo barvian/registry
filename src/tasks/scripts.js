@@ -140,4 +140,3 @@ watch.displayName = 'scripts:watch';
 watch.description = 'Watch scripts for changes and re-build/lint';
 
 export {watch};
-
