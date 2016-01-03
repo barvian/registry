@@ -14,9 +14,9 @@ Add the registry to an existing Gulp instance, passing in task configurations. T
 
 ```javascript
 import gulp from'gulp';
-import tasks from 'barvian-registry';
+import CommonRegistry from 'barvian-registry';
 
-gulp.registry(new BarvianRegistry({
+gulp.registry(new CommonRegistry({
   // config
 }));
 ```
