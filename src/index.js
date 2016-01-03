@@ -33,12 +33,6 @@ export class BarvianRegistry extends ForwardRefRegistry {
       ), [])
       // Add to gulp
       .forEach(fn => gulp.task(fn));
-
-    // Optional sync task
-    if (this.config.deploy &&
-      this.config.deploy.type === 'rsync' && this.config.deploy.syncable) {
-
-    }
   }
 }
 
