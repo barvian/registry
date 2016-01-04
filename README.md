@@ -114,4 +114,4 @@ All available configuration options are:
 
 ## Developing
 
-All work happens in `src/`.  Watch and build changes automatically with `npm run watch`.
+All work happens in `src/`.  Compile with `npm run compile`. Watch and build changes automatically with `npm run watch`. Lint with `npm run lint`.
