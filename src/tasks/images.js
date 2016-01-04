@@ -28,7 +28,7 @@ export const defaultConfig = {
 function build() {
   let config = Object.assign({}, defaultConfig, this);
 
-  return gulp.src(config.src/*, {since: gulp.lastRun('images:build')}*/)
+  return gulp.src(config.src, {since: gulp.lastRun('images:build')})
     .pipe(gulpif(config.minify, imagemin(config.imagemin)))
     .pipe(multidest(config.dest))
     .pipe(stream());

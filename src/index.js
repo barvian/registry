@@ -8,7 +8,7 @@ export class BarvianRegistry extends ForwardRefRegistry {
   static defaultConfig = {}
 
   constructor(config) {
-    super()
+    super();
 
     this.config = config;
   }
@@ -24,10 +24,14 @@ export class BarvianRegistry extends ForwardRefRegistry {
         Object.keys(tasks[task]).map(key => tasks[task][key])
           .filter(obj => typeof obj === 'function' && obj.displayName)
           // Allow functions to disable themselves based on config
-          .filter(fn => typeof fn.enabled === 'function' ? fn.enabled.call(this.config[task]) : true)
+          .filter(fn => typeof fn.enabled === 'function' ?
+            fn.enabled.call(this.config[task]) :
+            true)
           // Bind remaining functions to their config
           .map(fn => Object.assign(
-            tasks[task].configurable ? fn.bind(this.config[task]) : fn.bind(this),
+            tasks[task].configurable ?
+              fn.bind(this.config[task]) :
+              fn.bind(this),
             fn
           ))
       ), [])

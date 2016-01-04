@@ -1,5 +1,3 @@
-import gulp from 'gulp';
-
 // Default
 // =======
 
@@ -8,7 +6,7 @@ function df(done) {
     'build',
     'watch'
   )(done);
-};
+}
 df.displayName = 'default';
 df.description = 'Build and watch for changes';
 

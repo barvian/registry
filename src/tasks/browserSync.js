@@ -35,8 +35,6 @@ export {init};
 // ------
 
 function reload(done) {
-  let config = Object.assign({}, defaultConfig, this);
-
   browserSync.reload();
   done();
 }

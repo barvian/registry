@@ -12,11 +12,13 @@ export function deploy(done, config, reverse) {
     excludeFirst: config.excludeFirst,
     include: config.include,
     exclude: config.exclude
-  }, function(error, stdout, stderr, cmd) {
-    if (error) return done(error);
+  }, function(error, stdout) {
+    if (error) {
+      return done(error);
+    }
     log(stdout);
     done();
   });
-};
+}
 
 export default deploy;

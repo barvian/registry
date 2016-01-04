@@ -16,7 +16,6 @@ import {noop} from 'gulp-util';
 import debowerify from 'debowerify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
-import path from 'path';
 import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
@@ -65,7 +64,7 @@ function build(done, watch) {
     lint.bind(this),
     () => {
       if (config.bundle) {
-        let bundler = browserify(config.src, { debug: false })
+        let bundler = browserify(config.src, {debug: false})
           .transform(babelify)
           .transform(debowerify);
 
@@ -76,13 +75,16 @@ function build(done, watch) {
             .pipe(() => gulpif(config.sourcemaps, sourcemaps.write('.')));
 
           return bundler.bundle()
-            .on('error', function(err) { console.error(err); this.emit('end'); })
+            .on('error', function(err) {
+              console.error(err);
+              this.emit('end');
+            })
             .pipe(source(config.bundle))
             .pipe(buffer())
             .pipe(gulpif(config.minify, minifyPipe()))
             .pipe(multidest(config.dest))
             .pipe(gulpif('*.js', watch ? stream() : noop()));
-        }
+        };
 
         if (watch) {
           bundler = watchify(bundler);
@@ -92,21 +94,22 @@ function build(done, watch) {
         }
 
         return rebundle();
-      } else {
-        let pipeline = gulp.src(config.src)
-          .pipe(gulpif('*.html', crisper(config.crisper)))
-          .pipe(gulpif(config.sourcemaps, sourcemaps.init()))
-          .pipe(gulpif(/\.(js|es6)$/, babel()))
-          .pipe(gulpif(config.minify, uglify(config.uglify)))
-          .pipe(gulpif(config.sourcemaps, sourcemaps.write('.')))
-          .pipe(multidest(config.dest))
-          .pipe(gulpif('*.js', watch ? stream() : noop()));
-
-        if (watch) {
-          gulp.watch(config.all, () => pipeline);
-        }
-        return pipeline;
       }
+
+      // Not a bundle
+      let pipeline = gulp.src(config.src)
+        .pipe(gulpif('*.html', crisper(config.crisper)))
+        .pipe(gulpif(config.sourcemaps, sourcemaps.init()))
+        .pipe(gulpif(/\.(js|es6)$/, babel()))
+        .pipe(gulpif(config.minify, uglify(config.uglify)))
+        .pipe(gulpif(config.sourcemaps, sourcemaps.write('.')))
+        .pipe(multidest(config.dest))
+        .pipe(gulpif('*.js', watch ? stream() : noop()));
+
+      if (watch) {
+        gulp.watch(config.all, () => pipeline);
+      }
+      return pipeline;
     }
   )(done);
 }

@@ -16,7 +16,7 @@ export const defaultConfig = {};
 function build() {
   let config = Object.assign({}, defaultConfig, this);
 
-  return gulp.src(config.src/*, {since: gulp.lastRun('fonts:build')}*/)
+  return gulp.src(config.src, {since: gulp.lastRun('fonts:build')})
     .pipe(multidest(config.dest))
     .pipe(stream());
 }

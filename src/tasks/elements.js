@@ -5,13 +5,10 @@ import gulpif from 'gulp-if';
 import vulcanize from 'gulp-vulcanize';
 import uglify from 'gulp-uglify';
 import crisper from 'gulp-crisper';
-import babel from 'gulp-babel';
-import browserSync from './browserSync';
 import {test as wcTest} from 'web-component-tester';
 import path from 'path';
 import del from 'del';
 import flatten from 'array-flatten';
-import {prod} from '../util/env';
 import * as styles from './styles';
 import * as scripts from './scripts';
 
@@ -21,8 +18,11 @@ import * as scripts from './scripts';
 export const configurable = true;
 export const defaultConfig = {};
 
-const temp = (config) => path.relative(process.cwd(), path.resolve(`${config.base}/../elements.tmp`));
-const all = (config) => `${config.base}/**/*.{js,html}`;
+const temp = config => path.relative(
+  process.cwd(),
+  path.resolve(`${config.base}/../elements.tmp`)
+);
+const all = config => `${config.base}/**/*.{js,html}`;
 
 // Lint
 // ----
@@ -44,8 +44,8 @@ export {lint};
 
 function build(done) {
   let config = Object.assign({}, defaultConfig, this);
-  const tmp = temp(config),
-    js = scripts.supportedExts.filter(ext => ext !== 'html').join();
+  const tmp = temp(config);
+  const js = scripts.supportedExts.filter(ext => ext !== 'html').join();
 
   gulp.series(
     // Create temporary working directory
@@ -67,7 +67,8 @@ function build(done) {
         ],
         dest: tmp,
         sourcemaps: false,
-        minify: false // we'll minify at end
+        // we'll minify at end
+        minify: false
       })
     ),
     // Templates
@@ -93,7 +94,10 @@ export {build};
 function watch() {
   let config = Object.assign({}, defaultConfig, this);
 
-  gulp.watch([`${config.base}/**/*`, `!${config.base}/**/__tests__/**/*`], build.bind(this));
+  gulp.watch(
+    [`${config.base}/**/*`, `!${config.base}/**/__tests__/**/*`],
+    build.bind(this)
+  );
 }
 watch.displayName = 'elements:watch';
 watch.description = 'Watch elements for changes and re-build';
@@ -121,7 +125,7 @@ function test(done) {
 
   gulp.series(
     build.bind(this),
-    (cb) => wcTest({
+    cb => wcTest({
       suites: [`${temp(config)}/**/__tests__/**/*.html`]
     }, cb)
   )(done);

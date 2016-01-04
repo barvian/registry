@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-spacing */
 export * as build from './build';
 export * as browserSync from './browserSync';
 export * as clean from './clean';

@@ -1,5 +1,3 @@
-import gulp from 'gulp';
-
 // Watch
 // =====
 
@@ -15,7 +13,7 @@ function watch(done) {
   } else {
     watchTasks(done);
   }
-};
+}
 watch.displayName = 'watch';
 watch.description = 'Run all watch tasks';
 
