@@ -40,7 +40,7 @@ export const defaultConfig = {
 function lint() {
   let config = Object.assign({}, defaultConfig, this);
 
-  return gulp.src(config.all)
+  return gulp.src(config.all, {since: gulp.lastRun(lint)})
     .pipe(gulpif('*.html', htmlExtract({strip: true})))
     .pipe(eslint({
       parser: 'babel-eslint',
@@ -57,60 +57,63 @@ export {lint};
 // Build
 // -----
 
+function compileBundle(config, watch) {
+  let bundler = browserify(config.src, {debug: false})
+    .transform(babelify)
+    .transform(debowerify);
+
+  const rebundle = function() {
+    let minifyPipe = lazypipe()
+      .pipe(() => gulpif(config.sourcemaps, sourcemaps.init()))
+      .pipe(uglify, config.uglify)
+      .pipe(() => gulpif(config.sourcemaps, sourcemaps.write('.')));
+
+    return bundler.bundle()
+      .on('error', function(err) {
+        console.error(err);
+        this.emit('end');
+      })
+      .pipe(source(config.bundle))
+      .pipe(buffer())
+      .pipe(gulpif(config.minify, minifyPipe()))
+      .pipe(multidest(config.dest))
+      .pipe(gulpif('*.js', watch ? stream() : noop()));
+  };
+
+  if (watch) {
+    bundler = watchify(bundler);
+    bundler.on('update', function() {
+      rebundle();
+    });
+  }
+
+  return rebundle();
+}
+
+function compile(config, watch) {
+  let pipeline = gulp.src(config.src, {since: gulp.lastRun(compile)})
+    .pipe(gulpif('*.html', crisper(config.crisper)))
+    .pipe(gulpif(config.sourcemaps, sourcemaps.init()))
+    .pipe(gulpif(/\.(js|es6)$/, babel()))
+    .pipe(gulpif(config.minify, uglify(config.uglify)))
+    .pipe(gulpif(config.sourcemaps, sourcemaps.write('.')))
+    .pipe(multidest(config.dest))
+    .pipe(gulpif('*.js', watch ? stream() : noop()));
+
+  if (watch) {
+    gulp.watch(config.all, () => pipeline);
+  }
+  return pipeline;
+}
+
 function build(done, watch) {
   let config = Object.assign({}, defaultConfig, this);
 
   gulp.series(
     lint.bind(this),
-    () => {
-      if (config.bundle) {
-        let bundler = browserify(config.src, {debug: false})
-          .transform(babelify)
-          .transform(debowerify);
-
-        const rebundle = function() {
-          let minifyPipe = lazypipe()
-            .pipe(() => gulpif(config.sourcemaps, sourcemaps.init()))
-            .pipe(uglify, config.uglify)
-            .pipe(() => gulpif(config.sourcemaps, sourcemaps.write('.')));
-
-          return bundler.bundle()
-            .on('error', function(err) {
-              console.error(err);
-              this.emit('end');
-            })
-            .pipe(source(config.bundle))
-            .pipe(buffer())
-            .pipe(gulpif(config.minify, minifyPipe()))
-            .pipe(multidest(config.dest))
-            .pipe(gulpif('*.js', watch ? stream() : noop()));
-        };
-
-        if (watch) {
-          bundler = watchify(bundler);
-          bundler.on('update', function() {
-            rebundle();
-          });
-        }
-
-        return rebundle();
-      }
-
-      // Not a bundle
-      let pipeline = gulp.src(config.src)
-        .pipe(gulpif('*.html', crisper(config.crisper)))
-        .pipe(gulpif(config.sourcemaps, sourcemaps.init()))
-        .pipe(gulpif(/\.(js|es6)$/, babel()))
-        .pipe(gulpif(config.minify, uglify(config.uglify)))
-        .pipe(gulpif(config.sourcemaps, sourcemaps.write('.')))
-        .pipe(multidest(config.dest))
-        .pipe(gulpif('*.js', watch ? stream() : noop()));
-
-      if (watch) {
-        gulp.watch(config.all, () => pipeline);
-      }
-      return pipeline;
-    }
+    config.bundle ?
+      compileBundle.bind(this, config, watch) :
+      compile.bind(this, config, watch)
   )(done);
 }
 build.displayName = 'scripts:build';

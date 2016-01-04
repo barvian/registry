@@ -1,7 +1,7 @@
 {
   "name": "barvian-registry",
-  "version": "3.0.0",
-  "description": "Undertaker/Gulp registry for common tasks",
+  "version": "3.0.1",
+  "description": "Gulp registry for common tasks",
   "license": "MIT",
   "repository": "barvian/registry",
   "author": {

@@ -9,6 +9,8 @@ import {test as wcTest} from 'web-component-tester';
 import path from 'path';
 import del from 'del';
 import flatten from 'array-flatten';
+import {prod} from '../util/env';
+import {noop} from 'gulp-util';
 import * as styles from './styles';
 import * as scripts from './scripts';
 
@@ -16,7 +18,9 @@ import * as scripts from './scripts';
 // ========
 
 export const configurable = true;
-export const defaultConfig = {};
+export const defaultConfig = {
+  minify: prod()
+};
 
 const temp = config => path.relative(
   process.cwd(),
@@ -49,14 +53,15 @@ function build(done) {
 
   gulp.series(
     // Create temporary working directory
-    () => gulp.src(`${config.base}/**/*`)
+    () => gulp.src(`${config.base}/**/*`, {since: gulp.lastRun(build)})
       .pipe(gulp.dest(tmp)),
     gulp.parallel(
       // Styles
       styles.build.bind({
         src: `${tmp}/**/*.{${styles.supportedExts.join()}}`,
         dest: tmp,
-        modularize: true
+        modularize: true,
+        minify: config.minify
       }),
       // Scripts
       scripts.build.bind({
@@ -78,7 +83,10 @@ function build(done) {
         inlineCss: true
       }))
       .pipe(crisper())
-      .pipe(gulpif('*.js', uglify(scripts.defaultConfig.uglify)))
+      .pipe(gulpif('*.js', config.minify ?
+        uglify(scripts.defaultConfig.uglify) :
+        noop()
+      ))
       .pipe(multidest(config.dest))
       .pipe(stream())
   )(done);

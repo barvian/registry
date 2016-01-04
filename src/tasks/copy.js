@@ -21,7 +21,7 @@ function build() {
       base: config.base,
       cwd: config.base,
       dot: true,
-      since: gulp.lastRun('copy:build')
+      since: gulp.lastRun(build)
     })
     .pipe(multidest(config.dest))
     .pipe(stream());
