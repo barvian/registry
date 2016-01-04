@@ -19,7 +19,7 @@ export const stream = lazypipe()
 // ------
 
 function init(done) {
-  let config = Object.assign({}, defaultConfig, this);
+  const config = Object.assign({}, defaultConfig, this);
 
   if (!browserSync.active) {
     browserSync.init(config);

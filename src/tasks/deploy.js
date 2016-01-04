@@ -21,7 +21,7 @@ deploy.description = 'Deploy site';
 export {deploy};
 
 // Sync
-// ====
+// ----
 
 function sync(done) {
   let {type, syncable, ...config} = this;

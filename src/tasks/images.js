@@ -26,7 +26,7 @@ export const defaultConfig = {
 // -----
 
 function build() {
-  let config = Object.assign({}, defaultConfig, this);
+  const config = Object.assign({}, defaultConfig, this);
 
   return gulp.src(config.src, {since: gulp.lastRun(build)})
     .pipe(gulpif(config.minify, imagemin(config.imagemin)))
@@ -42,7 +42,7 @@ export {build};
 // -----
 
 function watch() {
-  let config = Object.assign({}, defaultConfig, this);
+  const config = Object.assign({}, defaultConfig, this);
 
   gulp.watch(config.src, build.bind(this));
 }
@@ -55,7 +55,7 @@ export {watch};
 // -----
 
 function clean() {
-  let config = Object.assign({}, defaultConfig, this);
+  const config = Object.assign({}, defaultConfig, this);
 
   return del(flatten([config.dest]));
 }

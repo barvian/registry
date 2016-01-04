@@ -32,7 +32,7 @@ const all = config => `${config.base}/**/*.{js,html}`;
 // ----
 
 function lint() {
-  let config = Object.assign({}, defaultConfig, this);
+  const config = Object.assign({}, defaultConfig, this);
 
   return scripts.lint.call({
     all: all(config)
@@ -47,7 +47,7 @@ export {lint};
 // -----
 
 function build(done) {
-  let config = Object.assign({}, defaultConfig, this);
+  const config = Object.assign({}, defaultConfig, this);
   const tmp = temp(config);
   const js = scripts.supportedExts.filter(ext => ext !== 'html').join();
 
@@ -100,7 +100,7 @@ export {build};
 // -----
 
 function watch() {
-  let config = Object.assign({}, defaultConfig, this);
+  const config = Object.assign({}, defaultConfig, this);
 
   gulp.watch(
     [`${config.base}/**/*`, `!${config.base}/**/__tests__/**/*`],
@@ -116,7 +116,7 @@ export {watch};
 // -----
 
 function clean() {
-  let config = Object.assign({}, defaultConfig, this);
+  const config = Object.assign({}, defaultConfig, this);
 
   return del(flatten([config.dest]).concat(temp(config)));
 }
@@ -129,7 +129,7 @@ export {clean};
 // ----
 
 function test(done) {
-  let config = Object.assign({}, defaultConfig, this);
+  const config = Object.assign({}, defaultConfig, this);
 
   gulp.series(
     build.bind(this),

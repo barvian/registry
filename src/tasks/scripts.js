@@ -38,7 +38,7 @@ export const defaultConfig = {
 // ----
 
 function lint() {
-  let config = Object.assign({}, defaultConfig, this);
+  const config = Object.assign({}, defaultConfig, this);
 
   return gulp.src(config.all, {since: gulp.lastRun(lint)})
     .pipe(gulpif('*.html', htmlExtract({strip: true})))
@@ -107,7 +107,7 @@ function compile(config, watch) {
 }
 
 function build(done, watch) {
-  let config = Object.assign({}, defaultConfig, this);
+  const config = Object.assign({}, defaultConfig, this);
 
   gulp.series(
     lint.bind(this),
@@ -125,7 +125,7 @@ export {build};
 // -----
 
 function clean() {
-  let config = Object.assign({}, defaultConfig, this);
+  const config = Object.assign({}, defaultConfig, this);
 
   return del(flatten([config.dest]).map(dest =>
     config.bundle ? `${dest}/${config.bundle}*` : `${dest}/*.js*`
