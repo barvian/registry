@@ -26,7 +26,7 @@ const temp = config => path.relative(
   process.cwd(),
   path.resolve(`${config.base}/../elements.tmp`)
 );
-const all = config => `${config.base}/**/*.{js,html}`;
+const js = config => `${config.base}/**/*.{${scripts.supportedExts.join('')}}`;
 
 // Lint
 // ----
@@ -35,7 +35,7 @@ function lint() {
   const config = Object.assign({}, defaultConfig, this);
 
   return scripts.lint.call({
-    all: all(config)
+    all: js(config)
   });
 }
 lint.displayName = 'elements:lint';
@@ -49,7 +49,7 @@ export {lint};
 function build(done) {
   const config = Object.assign({}, defaultConfig, this);
   const tmp = temp(config);
-  const js = scripts.supportedExts.filter(ext => ext !== 'html').join();
+  const jsExts = scripts.supportedExts.filter(ext => ext !== 'html').join();
 
   gulp.series(
     // Create temporary working directory
@@ -66,9 +66,9 @@ function build(done) {
       }),
       // Scripts
       scripts.build.bind({
-        all: all(config),
+        all: js(config),
         src: [
-          `${tmp}/**/*.{${js}}`,
+          `${tmp}/**/*.{${jsExts}}`,
           `${tmp}/**/__tests__/**/*.html`
         ],
         dest: tmp,

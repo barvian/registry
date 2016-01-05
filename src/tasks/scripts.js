@@ -77,7 +77,7 @@ function compileBundle(config, watch) {
       .pipe(buffer())
       .pipe(gulpif(config.minify, minifyPipe()))
       .pipe(multidest(config.dest))
-      .pipe(gulpif('*.js', watch ? stream() : noop()));
+      .pipe(gulpif(watch, stream()));
   };
 
   if (watch) {
@@ -98,7 +98,7 @@ function compile(config, watch) {
     .pipe(gulpif(config.minify, uglify(config.uglify)))
     .pipe(gulpif(config.sourcemaps, sourcemaps.write('.')))
     .pipe(multidest(config.dest))
-    .pipe(gulpif('*.js', watch ? stream() : noop()));
+    .pipe(gulpif(watch, stream()));
 
   if (watch) {
     gulp.watch(config.all, () => pipeline);

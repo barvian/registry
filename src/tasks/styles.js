@@ -50,7 +50,7 @@ function build() {
     .pipe(gulpif(config.modularize, styleMod()))
     .pipe(gulpif(!config.modularize && config.sourcemaps, sourcemaps.write('.')))
     .pipe(multidest(config.dest))
-    .pipe(gulpif('*.css', stream()));
+    .pipe(stream());
 }
 build.displayName = 'styles:build';
 build.description = 'Build styles';

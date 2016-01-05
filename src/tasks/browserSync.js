@@ -1,6 +1,8 @@
 import _browserSync from 'browser-sync';
 import lazypipe from 'lazypipe';
 import gulpif from 'gulp-if';
+import {noop} from 'gulp-util';
+
 
 // BrowserSync
 // ===========
@@ -13,7 +15,9 @@ export default browserSync;
 
 // Convenience pipeline for streaming updates
 export const stream = lazypipe()
-  .pipe(() => gulpif(browserSync.active, browserSync.stream()));
+  .pipe(() => gulpif('!*.map',
+    browserSync.active ? browserSync.stream() : noop())
+  );
 
 // Create
 // ------
