@@ -61,7 +61,8 @@ function build(done) {
         src: `${tmp}/**/*.{${styles.supportedExts.join()}}`,
         dest: tmp,
         modularize: true,
-        minify: config.minify
+        minify: config.minify,
+        includePaths: config.includePaths
       }),
       // Scripts
       scripts.build.bind({
