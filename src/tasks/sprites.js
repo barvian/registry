@@ -16,7 +16,10 @@ export const configurable = true;
 export const defaultConfig = {
   minify: prod(),
   bundle: 'sprites.svg',
-  svgmin: {}
+  svgmin: {},
+  svgstore: {
+    inlineSvg: true
+  }
 };
 
 // Build
@@ -27,7 +30,7 @@ function build() {
 
   return gulp.src(config.src)
     .pipe(gulpif(config.minify, svgmin(config.svgmin)))
-    .pipe(svgstore())
+    .pipe(svgstore(config.svgstore))
     .pipe(rename(config.bundle))
     .pipe(multidest(config.dest))
     .pipe(stream());
