@@ -19,6 +19,7 @@ import * as scripts from './scripts';
 
 export const configurable = true;
 export const defaultConfig = {
+  entry: 'index.html',
   minify: prod()
 };
 

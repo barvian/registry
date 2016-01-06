@@ -12,8 +12,9 @@ import crisper from 'gulp-crisper';
 import browserify from 'browserify';
 import watchify from 'watchify';
 import babelify from 'babelify';
-import {noop} from 'gulp-util';
 import debowerify from 'debowerify';
+import bd from 'browserify-data';
+import {noop} from 'gulp-util';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import del from 'del';
@@ -60,7 +61,8 @@ export {lint};
 function compileBundle(config, watch) {
   let bundler = browserify(config.src, {debug: false})
     .transform(babelify)
-    .transform(debowerify);
+    .transform(debowerify)
+    .transform(bd);
 
   const rebundle = function() {
     let minifyPipe = lazypipe()
