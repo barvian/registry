@@ -42,7 +42,7 @@ function build() {
       importer: jsonImporter,
       includePaths: config.includePaths,
       precision: 10
-    }).on('error', sass.logError)))
+    })).on('error', sass.logError))
     .pipe(autoprefixer(config.autoprefixer))
     .pipe(pixrem())
     // Concatenate and minify styles
