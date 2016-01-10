@@ -13,6 +13,7 @@ import jsonImporter from 'node-sass-json-importer';
 import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
+import bindProps from '../util/bind-properties';
 
 // Styles
 // ======
@@ -63,7 +64,7 @@ export {build};
 function watch() {
   const config = Object.assign({}, defaultConfig, this);
 
-  gulp.watch(config.all, build.bind(this));
+  gulp.watch(config.all, bindProps(build, this));
 }
 watch.displayName = 'styles:watch';
 watch.description = 'Watch styles for changes and re-build';

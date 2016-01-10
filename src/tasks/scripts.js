@@ -20,6 +20,7 @@ import buffer from 'vinyl-buffer';
 import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
+import bindProps from '../util/bind-properties';
 
 // Scripts
 // =======
@@ -112,7 +113,7 @@ function build(done, watch) {
   const config = Object.assign({}, defaultConfig, this);
 
   gulp.series(
-    lint.bind(this),
+    bindProps(lint, this),
     config.bundle ?
       compileBundle.bind(this, config, watch) :
       compile.bind(this, config, watch)

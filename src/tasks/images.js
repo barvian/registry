@@ -7,6 +7,7 @@ import {stream} from './browserSync';
 import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
+import bindProps from '../util/bind-properties';
 
 // Images
 // ======
@@ -44,7 +45,7 @@ export {build};
 function watch() {
   const config = Object.assign({}, defaultConfig, this);
 
-  gulp.watch(config.src, build.bind(this));
+  gulp.watch(config.src, bindProps(build, this));
 }
 watch.displayName = 'images:watch';
 watch.description = 'Watch images for changes and re-compress';

@@ -1,4 +1,5 @@
 import ForwardRefRegistry from 'undertaker-forward-reference';
+import bindProps from './util/bind-properties';
 import * as tasks from './tasks';
 
 // Barvian Registry
@@ -19,7 +20,7 @@ export class BarvianRegistry extends ForwardRefRegistry {
     Object.keys(tasks)
       // Filter out configurable tasks that haven't been configured
       .filter(task => !(tasks[task].configurable && !this.config[task]))
-      // For each task, reduce to only named functions and bind appropriately
+      // For each tasknpm , reduce to only named functions and bind appropriately
       .reduce((taskFns, task) => taskFns.concat(
         Object.keys(tasks[task]).map(key => tasks[task][key])
           .filter(obj => typeof obj === 'function' && obj.displayName)
@@ -28,11 +29,10 @@ export class BarvianRegistry extends ForwardRefRegistry {
             fn.enabled.call(this.config[task]) :
             true)
           // Bind remaining functions to their config
-          .map(fn => Object.assign(
+          .map(fn => bindProps(fn,
             tasks[task].configurable ?
-              fn.bind(this.config[task]) :
-              fn.bind(this),
-            fn
+              this.config[task] :
+              this
           ))
       ), [])
       // Add to gulp

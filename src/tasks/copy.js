@@ -3,6 +3,7 @@ import multidest from '../util/gulp-multidest';
 import {stream} from './browserSync';
 import del from 'del';
 import flatten from 'array-flatten';
+import bindProps from '../util/bind-properties';
 
 // Copy
 // ====
@@ -37,7 +38,7 @@ export {build};
 function watch() {
   const config = Object.assign({}, defaultConfig, this);
 
-  gulp.watch(config.src, build.bind(this));
+  gulp.watch(config.src, bindProps(build, this));
 }
 watch.displayName = 'copy:watch';
 watch.description = 'Watch fonts for changes and re-build';

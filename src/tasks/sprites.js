@@ -8,6 +8,7 @@ import {stream} from './browserSync';
 import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
+import bindProps from '../util/bind-properties';
 
 // Sprites
 // =======
@@ -46,7 +47,7 @@ export {build};
 function watch() {
   const config = Object.assign({}, defaultConfig, this);
 
-  gulp.watch(config.src, build.bind(this));
+  gulp.watch(config.src, bindProps(build, this));
 }
 watch.displayName = 'sprites:watch';
 watch.description = 'Watch sprites for changes and re-build';

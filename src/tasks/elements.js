@@ -13,6 +13,7 @@ import {prod} from '../util/env';
 import {noop} from 'gulp-util';
 import * as styles from './styles';
 import * as scripts from './scripts';
+import bindProps from '../util/bind-properties';
 
 // Elements
 // ========
@@ -58,7 +59,7 @@ function build(done) {
       .pipe(gulp.dest(tmp)),
     gulp.parallel(
       // Styles
-      styles.build.bind({
+      bindProps(styles.build, {
         src: `${tmp}/**/*.{${styles.supportedExts.join()}}`,
         dest: tmp,
         modularize: true,
@@ -66,7 +67,7 @@ function build(done) {
         includePaths: config.includePaths
       }),
       // Scripts
-      scripts.build.bind({
+      bindProps(scripts.build, {
         all: js(config),
         src: [
           `${tmp}/**/*.{${jsExts}}`,
@@ -106,7 +107,7 @@ function watch() {
 
   gulp.watch(
     [`${config.base}/**/*`, `!${config.base}/**/__tests__/**/*`],
-    build.bind(this)
+    bindProps(build, this)
   );
 }
 watch.displayName = 'elements:watch';
@@ -134,7 +135,7 @@ function test(done) {
   const config = Object.assign({}, defaultConfig, this);
 
   gulp.series(
-    build.bind(this),
+    bindProps(build, this),
     cb => wcTest({
       suites: [`${temp(config)}/**/__tests__/**/*.html`]
     }, cb)
