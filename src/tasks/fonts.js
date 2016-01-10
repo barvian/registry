@@ -3,7 +3,6 @@ import {stream} from './browserSync';
 import multidest from '../util/gulp-multidest';
 import del from 'del';
 import flatten from 'array-flatten';
-import runNamed from '../util/bind-properties';
 
 // Fonts
 // =====

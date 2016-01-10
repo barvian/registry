@@ -3,7 +3,6 @@ import multidest from '../util/gulp-multidest';
 import {stream} from './browserSync';
 import del from 'del';
 import flatten from 'array-flatten';
-import bindProps from '../util/bind-properties';
 
 // Copy
 // ====

@@ -1,4 +1,4 @@
-import gulp from 'gulp';
+import {src, watch as _watch} from 'gulp';
 import {stream} from './browserSync';
 import multidest from '../util/gulp-multidest';
 import sourcemaps from 'gulp-sourcemaps';
@@ -13,7 +13,6 @@ import jsonImporter from 'node-sass-json-importer';
 import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
-import bindProps from '../util/bind-properties';
 
 // Styles
 // ======
@@ -36,7 +35,7 @@ export const defaultConfig = {
 function build(_config) {
   const config = Object.assign({}, defaultConfig, _config);
 
-  return gulp.src(config.src)
+  return src(config.src)
     .pipe(gulpif(!config.modularize && config.sourcemaps, sourcemaps.init()))
     .pipe(gulpif(/\.(sass|scss)$/, sass({
       importer: jsonImporter,
@@ -61,7 +60,7 @@ export {build};
 // -----
 
 function watch(config) {
-  gulp.watch(config.all, () => build(config));
+  _watch(config.all, () => build(config));
 }
 watch.displayName = 'styles:watch';
 watch.description = 'Watch styles for changes and re-build';

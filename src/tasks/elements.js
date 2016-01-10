@@ -13,7 +13,6 @@ import {prod} from '../util/env';
 import {noop} from 'gulp-util';
 import * as styles from './styles';
 import * as scripts from './scripts';
-import bindProps from '../util/bind-properties';
 
 // Elements
 // ========

@@ -24,7 +24,7 @@ function sync(done, _config) {
   let {type, syncable, ...config} = _config;
   deploys[type].deploy(done, config, true);
 }
-sync.enabled = (config) => config.type === 'rsync' && config.syncable;
+sync.enabled = config => config.type === 'rsync' && config.syncable;
 sync.displayName = 'sync';
 sync.description = 'Sync files from server';
 

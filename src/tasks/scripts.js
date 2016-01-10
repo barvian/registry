@@ -14,13 +14,11 @@ import watchify from 'watchify';
 import babelify from 'babelify';
 import debowerify from 'debowerify';
 import bd from 'browserify-data';
-import {noop} from 'gulp-util';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
-import bindProps from '../util/bind-properties';
 
 // Scripts
 // =======
@@ -122,7 +120,7 @@ export {build};
 // Clean
 // -----
 
-function clean() {
+function clean(config) {
   return del(flatten([config.dest]).map(dest =>
     config.bundle ? `${dest}/${config.bundle}*` : `${dest}/*.js*`
   ));

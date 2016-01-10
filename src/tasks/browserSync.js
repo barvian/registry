@@ -3,7 +3,6 @@ import lazypipe from 'lazypipe';
 import gulpif from 'gulp-if';
 import {noop} from 'gulp-util';
 
-
 // BrowserSync
 // ===========
 

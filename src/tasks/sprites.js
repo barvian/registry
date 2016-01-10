@@ -8,7 +8,6 @@ import {stream} from './browserSync';
 import del from 'del';
 import flatten from 'array-flatten';
 import {prod} from '../util/env';
-import bindProps from '../util/bind-properties';
 
 // Sprites
 // =======

@@ -1,6 +1,5 @@
 import ForwardRefRegistry from 'undertaker-forward-reference';
 import args from './util/args';
-import bindProps from './util/bind-properties';
 import * as tasks from './tasks';
 
 // Barvian Registry
@@ -40,7 +39,7 @@ export class BarvianRegistry extends ForwardRefRegistry {
           .map(fn => this.wrapTask(task, fn))
       ), [])
       // Add to gulp
-      .forEach(fn => {gulp.task(fn); console.log(fn)});
+      .forEach(fn => gulp.task(fn));
   }
 
   // Bind task to its config and other props
