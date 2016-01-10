@@ -1,16 +1,13 @@
-import gulp from 'gulp';
 import * as deploys from './deploys';
 
 // Deploy
 // ======
 
-export const configurable = true;
-
 function deploy(done) {
-  gulp.series(
+  this.gulp.series(
     'build',
     cb => {
-      let {type, syncable, ...config} = this;
+      let {type, syncable, ...config} = this.config.deploy;
       deploys[type].deploy(cb, config);
     }
   )(done);
