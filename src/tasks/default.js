@@ -1,8 +1,8 @@
 // Default
 // =======
 
-function df(done) {
-  this.gulp.series(
+function df(done, gulp) {
+  gulp.series(
     'build',
     'watch'
   )(done);

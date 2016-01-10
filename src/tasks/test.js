@@ -1,9 +1,9 @@
 // Test
 // ====
 
-function test(done) {
-  this.gulp.parallel(
-    ...Object.keys(this.tasks()).filter(task => /\:test$/.test(task))
+function test(done, gulp) {
+  gulp.parallel(
+    ...gulp.tree().nodes.filter(task => /\:test$/.test(task))
   )(done);
 }
 test.displayName = 'test';

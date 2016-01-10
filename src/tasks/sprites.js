@@ -1,4 +1,4 @@
-import gulp from 'gulp';
+import {src, watch as _watch} from 'gulp';
 import multidest from '../util/gulp-multidest';
 import svgmin from 'gulp-svgmin';
 import svgstore from 'gulp-svgstore';
@@ -13,7 +13,6 @@ import bindProps from '../util/bind-properties';
 // Sprites
 // =======
 
-export const configurable = true;
 export const defaultConfig = {
   minify: prod(),
   bundle: 'sprites.svg',
@@ -26,10 +25,10 @@ export const defaultConfig = {
 // Build
 // -----
 
-function build() {
-  const config = Object.assign({}, defaultConfig, this);
+function build(_config) {
+  const config = Object.assign({}, defaultConfig, _config);
 
-  return gulp.src(config.src)
+  return src(config.src)
     .pipe(gulpif(config.minify, svgmin(config.svgmin)))
     .pipe(svgstore(config.svgstore))
     .pipe(rename(config.bundle))
@@ -44,10 +43,8 @@ export {build};
 // Watch
 // -----
 
-function watch() {
-  const config = Object.assign({}, defaultConfig, this);
-
-  gulp.watch(config.src, bindProps(build, this));
+function watch(config) {
+  _watch(config.src, () => build(config));
 }
 watch.displayName = 'sprites:watch';
 watch.description = 'Watch sprites for changes and re-build';
@@ -57,9 +54,7 @@ export {watch};
 // Clean
 // -----
 
-function clean() {
-  const config = Object.assign({}, defaultConfig, this);
-
+function clean(config) {
   return del(flatten([config.dest]).map(dest => `${dest}/${config.bundle}`));
 }
 clean.displayName = 'sprites:clean';

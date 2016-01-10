@@ -1,9 +1,9 @@
 // Build
 // =====
 
-function build(done) {
-  this.gulp.parallel(
-    ...Object.keys(this.tasks()).filter(task => /\:build$/.test(task))
+function build(done, gulp) {
+  gulp.parallel(
+    ...gulp.tree().nodes.filter(task => /\:build$/.test(task))
   )(done);
 }
 build.displayName = 'build';

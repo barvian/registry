@@ -1,12 +1,12 @@
 // Watch
 // =====
 
-function watch(done) {
-  let watchTasks = this.gulp.parallel(
-    ...Object.keys(this.tasks()).filter(task => /\:watch$/.test(task))
+function watch(done, gulp) {
+  let watchTasks = gulp.parallel(
+    ...gulp.tree().nodes.filter(task => /\:watch$/.test(task))
   );
-  if ('browserSync:init' in this.tasks()) {
-    this.gulp.series(
+  if (gulp.tree().nodes.indexOf('browserSync:init') !== -1) {
+    gulp.series(
       'browserSync:init',
       watchTasks
     )(done);

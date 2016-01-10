@@ -7,9 +7,6 @@ import {noop} from 'gulp-util';
 // BrowserSync
 // ===========
 
-export const configurable = true;
-export const defaultConfig = {};
-
 export const browserSync = _browserSync.create();
 export default browserSync;
 
@@ -22,9 +19,7 @@ export const stream = lazypipe()
 // Create
 // ------
 
-function init(done) {
-  const config = Object.assign({}, defaultConfig, this);
-
+function init(done, config) {
   if (!browserSync.active) {
     browserSync.init(config);
   }

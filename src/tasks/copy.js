@@ -1,4 +1,4 @@
-import gulp from 'gulp';
+import {src, watch as _watch} from 'gulp';
 import multidest from '../util/gulp-multidest';
 import {stream} from './browserSync';
 import del from 'del';
@@ -8,22 +8,17 @@ import bindProps from '../util/bind-properties';
 // Copy
 // ====
 
-export const configurable = true;
-export const defaultConfig = {};
-
 // Build
 // -----
 
-function build() {
-  const config = Object.assign({}, defaultConfig, this);
-
-  return gulp.src(
-    config.src, {
+function build(config, gulp) {
+  return src(
+    config.src, config.base ? {
       base: config.base,
       cwd: config.base,
       dot: true,
-      since: gulp.lastRun(build)
-    })
+      since: gulp.lastRun('copy:build')
+    } : {since: gulp.lastRun('copy:build')})
     .pipe(multidest(config.dest))
     .pipe(stream());
 }
@@ -35,10 +30,8 @@ export {build};
 // Watch
 // -----
 
-function watch() {
-  const config = Object.assign({}, defaultConfig, this);
-
-  gulp.watch(config.src, bindProps(build, this));
+function watch(config) {
+  _watch(config.src, () => build(config));
 }
 watch.displayName = 'copy:watch';
 watch.description = 'Watch fonts for changes and re-build';
@@ -48,13 +41,11 @@ export {watch};
 // Clean
 // -----
 
-function clean() {
-  const config = Object.assign({}, defaultConfig, this);
-
-  return Promise.all(
+function clean(config) {
+  return config.base ? Promise.all(
     flatten([config.dest])
       .map(dest => del(config.src, {cwd: dest, dot: true}))
-  );
+  ) : del(flatten([config.dest]));
 }
 clean.displayName = 'copy:clean';
 clean.description = 'Clean copies';

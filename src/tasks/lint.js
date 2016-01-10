@@ -1,9 +1,9 @@
 // Lint
 // ====
 
-function lint(done) {
-  this.gulp.parallel(
-    ...Object.keys(this.tasks()).filter(task => /\:lint$/.test(task))
+function lint(done, gulp) {
+  gulp.parallel(
+    ...gulp.tree().nodes.filter(task => /\:lint$/.test(task))
   )(done);
 }
 lint.displayName = 'lint';

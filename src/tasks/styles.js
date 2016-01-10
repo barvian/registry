@@ -18,7 +18,6 @@ import bindProps from '../util/bind-properties';
 // Styles
 // ======
 
-export const configurable = true;
 export const supportedExts = ['sass', 'scss', 'css'];
 export const defaultConfig = {
   modularize: false,
@@ -34,8 +33,8 @@ export const defaultConfig = {
 // Build
 // -----
 
-function build() {
-  const config = Object.assign({}, defaultConfig, this);
+function build(_config) {
+  const config = Object.assign({}, defaultConfig, _config);
 
   return gulp.src(config.src)
     .pipe(gulpif(!config.modularize && config.sourcemaps, sourcemaps.init()))
@@ -61,10 +60,8 @@ export {build};
 // Watch
 // -----
 
-function watch() {
-  const config = Object.assign({}, defaultConfig, this);
-
-  gulp.watch(config.all, bindProps(build, this));
+function watch(config) {
+  gulp.watch(config.all, () => build(config));
 }
 watch.displayName = 'styles:watch';
 watch.description = 'Watch styles for changes and re-build';
@@ -74,9 +71,7 @@ export {watch};
 // Clean
 // -----
 
-function clean() {
-  const config = Object.assign({}, defaultConfig, this);
-
+function clean(config) {
   return del(flatten([config.dest]).concat(['.sass-cache/']));
 }
 clean.displayName = 'styles:clean';

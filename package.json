@@ -1,6 +1,6 @@
 {
   "name": "barvian-registry",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "Gulp registry for common tasks",
   "license": "MIT",
   "repository": "barvian/registry",

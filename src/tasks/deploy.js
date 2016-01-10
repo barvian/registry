@@ -3,11 +3,11 @@ import * as deploys from './deploys';
 // Deploy
 // ======
 
-function deploy(done) {
-  this.gulp.series(
+function deploy(done, _config, gulp) {
+  gulp.series(
     'build',
     cb => {
-      let {type, syncable, ...config} = this.config.deploy;
+      let {type, syncable, ...config} = _config;
       deploys[type].deploy(cb, config);
     }
   )(done);
@@ -20,13 +20,11 @@ export {deploy};
 // Sync
 // ----
 
-function sync(done) {
-  let {type, syncable, ...config} = this;
+function sync(done, _config) {
+  let {type, syncable, ...config} = _config;
   deploys[type].deploy(done, config, true);
 }
-sync.enabled = function() {
-  return this.type === 'rsync' && this.syncable;
-};
+sync.enabled = (config) => config.type === 'rsync' && config.syncable;
 sync.displayName = 'sync';
 sync.description = 'Sync files from server';
 

@@ -1,23 +1,18 @@
-import gulp from 'gulp';
+import {src, watch as _watch} from 'gulp';
 import {stream} from './browserSync';
 import multidest from '../util/gulp-multidest';
 import del from 'del';
 import flatten from 'array-flatten';
-import bindProps from '../util/bind-properties';
+import runNamed from '../util/bind-properties';
 
 // Fonts
 // =====
 
-export const configurable = true;
-export const defaultConfig = {};
-
 // Build
 // -----
 
-function build() {
-  const config = Object.assign({}, defaultConfig, this);
-
-  return gulp.src(config.src, {since: gulp.lastRun(build)})
+function build(config, gulp) {
+  return src(config.src, {since: gulp.lastRun('fonts:build')})
     .pipe(multidest(config.dest))
     .pipe(stream());
 }
@@ -29,10 +24,8 @@ export {build};
 // Watch
 // -----
 
-function watch() {
-  const config = Object.assign({}, defaultConfig, this);
-
-  gulp.watch(config.src, bindProps(build, this));
+function watch(config, gulp) {
+  _watch(config.src, () => build(config, gulp));
 }
 watch.displayName = 'fonts:watch';
 watch.description = 'Watch fonts for changes and re-build';
@@ -42,9 +35,7 @@ export {watch};
 // Clean
 // -----
 
-function clean() {
-  const config = Object.assign({}, defaultConfig, this);
-
+function clean(config) {
   return del(flatten([config.dest]));
 }
 clean.displayName = 'fonts:clean';

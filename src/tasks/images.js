@@ -1,4 +1,4 @@
-import gulp from 'gulp';
+import {src, watch as _watch} from 'gulp';
 import multidest from '../util/gulp-multidest';
 import imagemin from 'gulp-imagemin';
 import gulpif from 'gulp-if';
@@ -12,7 +12,6 @@ import bindProps from '../util/bind-properties';
 // Images
 // ======
 
-export const configurable = true;
 export const defaultConfig = {
   minify: prod(),
   imagemin: {
@@ -26,10 +25,10 @@ export const defaultConfig = {
 // Build
 // -----
 
-function build() {
-  const config = Object.assign({}, defaultConfig, this);
+function build(_config, gulp) {
+  const config = Object.assign({}, defaultConfig, _config);
 
-  return gulp.src(config.src, {since: gulp.lastRun(build)})
+  return src(config.src, {since: gulp.lastRun('images:build')})
     .pipe(gulpif(config.minify, imagemin(config.imagemin)))
     .pipe(multidest(config.dest))
     .pipe(stream());
@@ -42,10 +41,8 @@ export {build};
 // Watch
 // -----
 
-function watch() {
-  const config = Object.assign({}, defaultConfig, this);
-
-  gulp.watch(config.src, bindProps(build, this));
+function watch(config, gulp) {
+  _watch(config.src, () => build(config, gulp));
 }
 watch.displayName = 'images:watch';
 watch.description = 'Watch images for changes and re-compress';
@@ -55,9 +52,7 @@ export {watch};
 // Clean
 // -----
 
-function clean() {
-  const config = Object.assign({}, defaultConfig, this);
-
+function clean(config) {
   return del(flatten([config.dest]));
 }
 clean.displayName = 'images:clean';

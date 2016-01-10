@@ -1,4 +1,4 @@
-import gulp from 'gulp';
+import {src, dest, watch as _watch, series, parallel} from 'gulp';
 import {stream} from './browserSync';
 import multidest from '../util/gulp-multidest';
 import gulpif from 'gulp-if';
@@ -18,7 +18,6 @@ import bindProps from '../util/bind-properties';
 // Elements
 // ========
 
-export const configurable = true;
 export const defaultConfig = {
   entry: 'index.html',
   minify: prod()
@@ -33,12 +32,10 @@ const js = config => `${config.base}/**/*.{${scripts.supportedExts.join('')}}`;
 // Lint
 // ----
 
-function lint() {
-  const config = Object.assign({}, defaultConfig, this);
-
-  return scripts.lint.call({
+function lint(config, gulp) {
+  return scripts.lint({
     all: js(config)
-  });
+  }, gulp);
 }
 lint.displayName = 'elements:lint';
 lint.description = 'Lint elements';
@@ -48,18 +45,18 @@ export {lint};
 // Build
 // -----
 
-function build(done) {
-  const config = Object.assign({}, defaultConfig, this);
+function build(done, _config, gulp) {
+  const config = Object.assign({}, defaultConfig, _config);
   const tmp = temp(config);
   const jsExts = scripts.supportedExts.filter(ext => ext !== 'html').join();
 
-  gulp.series(
+  series(
     // Create temporary working directory
-    () => gulp.src(`${config.base}/**/*`, {since: gulp.lastRun(build)})
-      .pipe(gulp.dest(tmp)),
-    gulp.parallel(
+    () => src(`${config.base}/**/*`, {since: gulp.lastRun('elements:build')})
+      .pipe(dest(tmp)),
+    parallel(
       // Styles
-      bindProps(styles.build, {
+      () => styles.build({
         src: `${tmp}/**/*.{${styles.supportedExts.join()}}`,
         dest: tmp,
         modularize: true,
@@ -67,7 +64,7 @@ function build(done) {
         includePaths: config.includePaths
       }),
       // Scripts
-      bindProps(scripts.build, {
+      cb => scripts.build(cb, {
         all: js(config),
         src: [
           `${tmp}/**/*.{${jsExts}}`,
@@ -77,10 +74,10 @@ function build(done) {
         sourcemaps: false,
         // we'll minify at end
         minify: false
-      })
+      }, gulp)
     ),
     // Templates
-    () => gulp.src(`${tmp}/${config.entry}`)
+    () => src(`${tmp}/${config.entry}`)
       .pipe(vulcanize({
         inlineScripts: true,
         inlineCss: true
@@ -102,12 +99,10 @@ export {build};
 // Watch
 // -----
 
-function watch() {
-  const config = Object.assign({}, defaultConfig, this);
-
-  gulp.watch(
+function watch(config) {
+  _watch(
     [`${config.base}/**/*`, `!${config.base}/**/__tests__/**/*`],
-    bindProps(build, this)
+    done => build(done, config)
   );
 }
 watch.displayName = 'elements:watch';
@@ -118,9 +113,7 @@ export {watch};
 // Clean
 // -----
 
-function clean() {
-  const config = Object.assign({}, defaultConfig, this);
-
+function clean(config) {
   return del(flatten([config.dest]).concat(temp(config)));
 }
 clean.displayName = 'elements:clean';
@@ -131,11 +124,9 @@ export {clean};
 // Test
 // ----
 
-function test(done) {
-  const config = Object.assign({}, defaultConfig, this);
-
-  gulp.series(
-    bindProps(build, this),
+function test(done, config, gulp) {
+  series(
+    cb => build(cb, config, gulp),
     cb => wcTest({
       suites: [`${temp(config)}/**/__tests__/**/*.html`]
     }, cb)

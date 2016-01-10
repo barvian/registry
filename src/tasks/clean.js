@@ -3,10 +3,10 @@ import del from 'del';
 // Clean
 // =====
 
-function clean(done) {
-  this.gulp.parallel(
-    () => del(this.config.clean),
-    ...Object.keys(this.tasks()).filter(task => /\:clean$/.test(task))
+function clean(done, config, gulp) {
+  gulp.parallel(
+    () => del(config),
+    ...gulp.tree().nodes.filter(task => /\:clean$/.test(task))
   )(done);
 }
 clean.displayName = 'clean';

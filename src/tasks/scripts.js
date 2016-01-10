@@ -1,4 +1,4 @@
-import gulp from 'gulp';
+import {src, _watch, series} from 'gulp';
 import browserSync, {stream} from './browserSync';
 import multidest from '../util/gulp-multidest';
 import lazypipe from 'lazypipe';
@@ -25,7 +25,6 @@ import bindProps from '../util/bind-properties';
 // Scripts
 // =======
 
-export const configurable = true;
 export const supportedExts = ['js', 'es6', 'html'];
 export const defaultConfig = {
   sourcemaps: true,
@@ -39,10 +38,8 @@ export const defaultConfig = {
 // Lint
 // ----
 
-function lint() {
-  const config = Object.assign({}, defaultConfig, this);
-
-  return gulp.src(config.all, {since: gulp.lastRun(lint)})
+function lint(config, gulp) {
+  return src(config.all, {since: gulp.lastRun('scripts:lint')})
     .pipe(gulpif('*.html', htmlExtract({strip: true})))
     .pipe(eslint({
       parser: 'babel-eslint',
@@ -93,8 +90,8 @@ function compileBundle(config, watch) {
   return rebundle();
 }
 
-function compile(config, watch) {
-  let pipeline = gulp.src(config.src, {since: gulp.lastRun(compile)})
+function compile(config, gulp, watch) {
+  let pipeline = src(config.src, {since: gulp.lastRun(compile)})
     .pipe(gulpif('*.html', crisper(config.crisper)))
     .pipe(gulpif(config.sourcemaps, sourcemaps.init()))
     .pipe(gulpif(/\.(js|es6)$/, babel()))
@@ -104,19 +101,17 @@ function compile(config, watch) {
     .pipe(gulpif(watch, stream()));
 
   if (watch) {
-    gulp.watch(config.all, () => pipeline);
+    _watch(config.all, () => pipeline);
   }
   return pipeline;
 }
 
-function build(done, watch) {
-  const config = Object.assign({}, defaultConfig, this);
-
-  gulp.series(
-    bindProps(lint, this),
-    config.bundle ?
-      compileBundle.bind(this, config, watch) :
-      compile.bind(this, config, watch)
+function build(done, config, gulp, watch) {
+  series(
+    () => lint(config, gulp),
+    () => config.bundle ?
+      compileBundle(config, watch) :
+      compile(config, gulp, watch)
   )(done);
 }
 build.displayName = 'scripts:build';
@@ -128,8 +123,6 @@ export {build};
 // -----
 
 function clean() {
-  const config = Object.assign({}, defaultConfig, this);
-
   return del(flatten([config.dest]).map(dest =>
     config.bundle ? `${dest}/${config.bundle}*` : `${dest}/*.js*`
   ));
@@ -142,8 +135,8 @@ export {clean};
 // Watch
 // -----
 
-function watch(done) {
-  build.call(this, done, true);
+function watch(done, config, gulp) {
+  return build(done, config, gulp, true);
 }
 watch.displayName = 'scripts:watch';
 watch.description = 'Watch scripts for changes and re-build/lint';
