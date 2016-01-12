@@ -98,10 +98,10 @@ export {build};
 // Watch
 // -----
 
-function watch(config) {
+function watch(config, gulp) {
   _watch(
     [`${config.base}/**/*`, `!${config.base}/**/__tests__/**/*`],
-    done => build(done, config)
+    done => build(done, config, gulp)
   );
 }
 watch.displayName = 'elements:watch';
