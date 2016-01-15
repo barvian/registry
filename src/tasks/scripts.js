@@ -1,4 +1,4 @@
-import {src, _watch, series} from 'gulp';
+import {src, watch as _watch, series} from 'gulp';
 import browserSync, {stream} from './browserSync';
 import multidest from '../util/gulp-multidest';
 import lazypipe from 'lazypipe';
