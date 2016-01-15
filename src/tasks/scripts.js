@@ -36,8 +36,8 @@ export const defaultConfig = {
 // Lint
 // ----
 
-function lint(config, gulp) {
-  return src(config.all, {since: gulp.lastRun('scripts:lint')})
+function lint(config, gulp, watch) {
+  let pipeline = src(config.all, {since: gulp.lastRun('scripts:lint')})
     .pipe(gulpif('*.html', htmlExtract({strip: true})))
     .pipe(eslint({
       parser: 'babel-eslint',
@@ -45,6 +45,11 @@ function lint(config, gulp) {
     }))
     .pipe(eslint.format())
     .pipe(gulpif(!browserSync.active, eslint.failAfterError()));
+
+  if (watch) {
+    _watch(config.all, () => pipeline);
+  }
+  return pipeline;
 }
 lint.displayName = 'scripts:lint';
 lint.description = 'Lint scripts';
@@ -106,7 +111,7 @@ function compile(config, gulp, watch) {
 
 function build(done, config, gulp, watch) {
   series(
-    () => lint(config, gulp),
+    () => lint(config, gulp, watch),
     () => config.bundle ?
       compileBundle(config, watch) :
       compile(config, gulp, watch)
