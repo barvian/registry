@@ -5,6 +5,7 @@ import gulpif from 'gulp-if';
 import vulcanize from 'gulp-vulcanize';
 import uglify from 'gulp-uglify';
 import crisper from 'gulp-crisper';
+import replace from 'gulp-replace';
 import {test as wcTest} from 'web-component-tester';
 import path from 'path';
 import del from 'del';
@@ -82,6 +83,8 @@ function build(done, _config, gulp) {
         inlineCss: true
       }))
       .pipe(crisper())
+      // Strip sourcemaps
+      .pipe(replace(/^\/[\/\*]\#\s*sourceMapping.*$/gm, ''))
       .pipe(gulpif('*.js', config.minify ?
         uglify(scripts.defaultConfig.uglify) :
         noop()
