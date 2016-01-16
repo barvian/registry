@@ -6,6 +6,7 @@ import vulcanize from 'gulp-vulcanize';
 import uglify from 'gulp-uglify';
 import crisper from 'gulp-crisper';
 import replace from 'gulp-replace';
+import htmlmin from 'gulp-htmlmin';
 import {test as wcTest} from 'web-component-tester';
 import path from 'path';
 import del from 'del';
@@ -20,7 +21,12 @@ import * as scripts from './scripts';
 
 export const defaultConfig = {
   entry: 'index.html',
-  minify: prod()
+  minify: prod(),
+  htmlmin: {
+    removeComments: true,
+    collapseWhitespace: true,
+    removeOptionalTags: true
+  }
 };
 
 const temp = config => path.relative(
@@ -85,6 +91,7 @@ function build(done, _config, gulp) {
       .pipe(crisper())
       // Strip sourcemaps
       .pipe(replace(/^\/[\/\*]\#\s*sourceMapping.*$/gm, ''))
+      .pipe(gulpif('*.html', config.minify ? htmlmin(config.htmlmin) : noop()))
       .pipe(gulpif('*.js', config.minify ?
         uglify(scripts.defaultConfig.uglify) :
         noop()
