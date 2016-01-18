@@ -36,9 +36,7 @@ function build(_config) {
   const config = Object.assign({}, defaultConfig, _config);
 
   return src(config.src)
-    .pipe(gulpif(config.modularize,
-      noop(), config.sourcemaps ? sourcemaps.init() : noop()
-    ))
+    .pipe(gulpif(config.sourcemaps, sourcemaps.init()))
     .pipe(gulpif(/\.(sass|scss)$/, sass({
       importer: jsonImporter,
       includePaths: config.includePaths,
@@ -49,9 +47,7 @@ function build(_config) {
     // Concatenate and minify styles
     .pipe(gulpif('*.css', config.minify ? nano(config.nano) : noop()))
     .pipe(gulpif(config.modularize, styleMod()))
-    .pipe(gulpif(config.modularize,
-      noop(), config.sourcemaps ? sourcemaps.write('.') : noop()
-    ))
+    .pipe(gulpif('*.css', config.sourcemaps ? sourcemaps.write('.') : noop()))
     .pipe(multidest(config.dest))
     .pipe(stream());
 }
