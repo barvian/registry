@@ -52,7 +52,7 @@ export {lint};
 // -----
 
 function build(done, _config, gulp) {
-  const config = Object.assign({}, defaultConfig, _config);
+  const config = {...defaultConfig, ..._config};
   const tmp = temp(config);
   const jsExts = scripts.supportedExts.filter(ext => ext !== 'html').join();
 

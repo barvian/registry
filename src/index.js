@@ -18,7 +18,7 @@ export class BarvianRegistry extends ForwardRefRegistry {
   constructor(config) {
     super();
 
-    this.config = Object.assign({}, BarvianRegistry.defaultConfig, config);
+    this.config = {...BarvianRegistry.defaultConfig, ...config};
   }
 
   init(gulp) {

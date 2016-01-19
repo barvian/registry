@@ -25,7 +25,7 @@ export const defaultConfig = {
 // -----
 
 function build(_config) {
-  const config = Object.assign({}, defaultConfig, _config);
+  const config = {...defaultConfig, ..._config};
 
   return src(config.src)
     .pipe(gulpif(config.minify, svgmin(config.svgmin)))

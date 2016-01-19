@@ -25,7 +25,7 @@ export const defaultConfig = {
 // -----
 
 function build(_config, gulp) {
-  const config = Object.assign({}, defaultConfig, _config);
+  const config = {...defaultConfig, ..._config};
 
   return src(config.src, {since: gulp.lastRun('images:build')})
     .pipe(gulpif(config.minify, imagemin(config.imagemin)))
