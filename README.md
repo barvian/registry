@@ -13,7 +13,7 @@ npm install barvian/registry --save-dev
 Add the registry to an existing Gulp instance, passing in task configurations. To disable certain tasks, simply omit them from configuration.
 
 ```javascript
-import gulp from'gulp';
+import gulp from 'gulp';
 import CommonRegistry from 'barvian-registry';
 
 gulp.registry(new CommonRegistry({
@@ -111,11 +111,3 @@ All available configuration options are:
   ]
 }
 ```
-
-## Developing
-
-All work happens in `src/`.
-
-1. Compile with `npm run compile`.
-2. Watch and build changes automatically with `npm run watch`.
-3. Lint with `npm run lint`.

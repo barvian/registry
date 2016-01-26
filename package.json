@@ -9,15 +9,12 @@
     "email": "max@barvian.me",
     "url": "barvian.me"
   },
-  "main": "lib",
+  "main": "./",
   "engines": {
-    "node": ">=0.10.0"
+    "node": "^5.0"
   },
   "scripts": {
-    "compile": "babel --presets es2015,stage-0 src --out-dir lib",
-    "watch": "babel --presets es2015,stage-0 --watch src --out-dir lib",
-    "lint": "eslint --env node --parser babel-eslint -c google --rule 'require-jsdoc: 0' src/**",
-    "prepublish": "npm run compile"
+    "lint": "eslint --env node -c google --rule 'require-jsdoc: 0' **/*.js"
   },
   "keywords": [
     "gulpfile",
@@ -26,7 +23,6 @@
   ],
   "dependencies": {
     "array-flatten": "^2.0.0",
-    "babel-eslint": "^4.1.6",
     "babelify": "^7.2.0",
     "bower": "^1.5.2",
     "browser-sync": "^2.9.11",
@@ -35,7 +31,6 @@
     "debowerify": "^1.3.1",
     "del": "^2.0.2",
     "eslint-config-google": "^0.3.0",
-    "gulp": "gulpjs/gulp#4.0",
     "gulp-autoprefixer": "^3.0.1",
     "gulp-babel": "^6.1.1",
     "gulp-crisper": "^1.0.0",
@@ -75,5 +70,8 @@
     "babel-preset-stage-0": "^6.3.13",
     "eslint": "^1.10.3",
     "eslint-config-google": "^0.3.0"
+  },
+  "peerDependencies": {
+    "gulp": "^4.0"
   }
 }
