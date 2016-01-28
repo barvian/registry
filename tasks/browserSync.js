@@ -1,6 +1,6 @@
 'use strict';
 
-const _browserSync = require('browser-sync');
+const browserSync = require('browser-sync');
 const lazypipe = require('lazypipe');
 const gulpif = require('gulp-if');
 const noop = require('gulp-util').noop;
@@ -8,7 +8,7 @@ const noop = require('gulp-util').noop;
 // BrowserSync
 // ===========
 
-const server = _browserSync.create();
+const server = browserSync.create();
 
 // Convenience pipeline for streaming updates
 const stream = lazypipe()

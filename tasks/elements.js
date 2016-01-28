@@ -30,6 +30,7 @@ const defaultConfig = {
     removeOptionalTags: true
   }
 };
+
 module.exports = {defaultConfig, lint, build, watch, clean, test};
 
 const temp = config => path.relative(

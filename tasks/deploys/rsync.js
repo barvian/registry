@@ -6,7 +6,7 @@ const rsync = require('rsyncwrapper').rsync;
 // rsync
 // =====
 
-module.exports = function deploy(done, config, reverse) {
+module.exports = function (done, config, reverse) {
   const dest = `${config.username}@${config.host}:${config.dest}`;
   rsync({
     src: reverse ? dest : config.src,

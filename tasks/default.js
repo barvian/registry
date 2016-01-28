@@ -3,6 +3,8 @@
 // Default
 // =======
 
+module.exports = df;
+
 function df(done, gulp) {
   gulp.series(
     'build',
@@ -11,5 +13,3 @@ function df(done, gulp) {
 }
 df.displayName = 'default';
 df.description = 'Build and watch for changes';
-
-module.exports = df;

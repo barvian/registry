@@ -3,6 +3,8 @@
 // Watch
 // =====
 
+module.exports = watch;
+
 function watch(done, gulp) {
   let watchTasks = gulp.parallel(
     ...gulp.tree().nodes.filter(task => /\:watch$/.test(task))
@@ -18,5 +20,3 @@ function watch(done, gulp) {
 }
 watch.displayName = 'watch';
 watch.description = 'Run all watch tasks';
-
-module.exports = watch;

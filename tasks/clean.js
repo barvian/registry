@@ -5,6 +5,8 @@ const del = require('del');
 // Clean
 // =====
 
+module.exports = clean;
+
 function clean(done, config, gulp) {
   gulp.parallel(
     () => del(config),
@@ -13,5 +15,3 @@ function clean(done, config, gulp) {
 }
 clean.displayName = 'clean';
 clean.description = 'Run all clean tasks';
-
-module.exports = clean;
