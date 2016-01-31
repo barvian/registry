@@ -12,6 +12,7 @@ module.exports = {
   images: require('./images'),
   lint: require('./lint'),
   scripts: require('./scripts'),
+  sprites: require('./sprites'),
   styles: require('./styles'),
   test: require('./test'),
   watch: require('./watch')

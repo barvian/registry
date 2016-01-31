@@ -1,15 +1,15 @@
 'use strict';
 
-const {src, watch: _watch} = require('gulp');
+const _gulp = require('gulp');
 const multidest = require('../util/gulp-multidest');
 const svgmin = require('gulp-svgmin');
 const svgstore = require('gulp-svgstore');
 const rename = require('gulp-rename');
 const gulpif = require('gulp-if');
-const {stream} = require('./browserSync');
+const stream = require('./browserSync').stream;
 const del = require('del');
 const flatten = require('array-flatten');
-const {prod} = require('../util/env');
+const prod = require('../util/env').prod;
 
 // Sprites
 // =======
@@ -29,9 +29,9 @@ module.exports = {defaultConfig, build, watch, clean};
 // -----
 
 function build(_config) {
-  const config = {...defaultConfig, ..._config};
+  const config = Object.assign({}, defaultConfig, _config);
 
-  return src(config.src)
+  return _gulp.src(config.src)
     .pipe(gulpif(config.minify, svgmin(config.svgmin)))
     .pipe(svgstore(config.svgstore))
     .pipe(rename(config.bundle))
@@ -45,7 +45,7 @@ build.description = 'Build sprites';
 // -----
 
 function watch(config) {
-  _watch(config.src, () => build(config));
+  _gulp.watch(config.src, () => build(config));
 }
 watch.displayName = 'sprites:watch';
 watch.description = 'Watch sprites for changes and re-build';
