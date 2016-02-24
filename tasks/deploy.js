@@ -11,7 +11,7 @@ function deploy(done, config, gulp) {
   gulp.series(
     'build',
     cb => {
-      deploys[config.type].deploy(cb, config);
+      deploys[config.type](cb, config);
     }
   )(done);
 }

@@ -8,7 +8,6 @@ const autoprefixer = require('gulp-autoprefixer');
 const nano = require('gulp-cssnano');
 const sass = require('gulp-sass');
 const gulpif = require('gulp-if');
-const pixrem = require('gulp-pixrem');
 const styleMod = require('gulp-style-modules');
 const noop = require('gulp-util').noop;
 const jsonImporter = require('node-sass-json-importer');
@@ -47,7 +46,6 @@ function build(_config) {
       precision: 10
     })).on('error', sass.logError))
     .pipe(autoprefixer(config.autoprefixer))
-    .pipe(pixrem())
     // Concatenate and minify styles
     .pipe(gulpif('*.css', config.minify ? nano(config.nano) : noop()))
     .pipe(gulpif(config.modularize, styleMod()))
