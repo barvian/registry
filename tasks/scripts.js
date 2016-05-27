@@ -113,7 +113,7 @@ function compile(config, gulp, watch) {
 
 function build(done, config, gulp, watch) {
   _gulp.series(
-    () => lint(config, gulp, watch),
+    () => config.lint ? lint(config, gulp, watch) : null,
     () => config.bundle ?
       compileBundle(config, watch) :
       compile(config, gulp, watch)
