@@ -10,7 +10,7 @@ const sass = require('gulp-sass');
 const gulpif = require('gulp-if');
 const styleMod = require('gulp-style-modules');
 const noop = require('gulp-util').noop;
-const jsonImporter = require('node-sass-json-importer');
+const importOnce = require('node-sass-import-once');
 const del = require('del');
 const flatten = require('array-flatten');
 const prod = require('../util/env').prod;
@@ -41,7 +41,7 @@ function build(_config) {
   return _gulp.src(config.src)
     .pipe(gulpif(config.sourcemaps, sourcemaps.init()))
     .pipe(gulpif(/\.(sass|scss)$/, sass({
-      importer: jsonImporter,
+      importer: importOnce,
       includePaths: config.includePaths,
       precision: 10
     })).on('error', sass.logError))
