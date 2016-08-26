@@ -42,6 +42,11 @@ function build(_config) {
     .pipe(gulpif(config.sourcemaps, sourcemaps.init()))
     .pipe(gulpif(/\.(sass|scss)$/, sass({
       importer: importOnce,
+      importOnce: {
+        index: true,
+        css: true,
+        bower: true
+      },
       includePaths: config.includePaths,
       precision: 10
     })).on('error', sass.logError))
