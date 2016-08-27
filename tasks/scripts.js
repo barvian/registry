@@ -66,8 +66,8 @@ function compileBundle(config, watch) {
   console.log('are you');
   let bundler = browserify(config.src, {debug: true})
     .transform(babelify);
-    // .transform(debowerify)
-    // .transform(browserifyData);
+    .transform(debowerify)
+    .transform(browserifyData);
 
   const rebundle = function() {
     let minifyPipe = lazypipe()
@@ -82,7 +82,7 @@ function compileBundle(config, watch) {
       })
       .pipe(source(config.bundle))
       .pipe(buffer())
-      // .pipe(gulpif(config.minify, minifyPipe()))
+      .pipe(gulpif(config.minify, minifyPipe()))
       .pipe(multidest(config.dest))
       .pipe(gulpif(watch, browserSync.stream()));
   };
