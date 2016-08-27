@@ -65,7 +65,7 @@ lint.description = 'Lint scripts';
 function compileBundle(config, watch) {
   console.log('are you');
   let bundler = browserify(config.src, {debug: true})
-    .transform(babelify);
+    .transform(babelify)
     .transform(debowerify)
     .transform(browserifyData);
 
@@ -116,7 +116,7 @@ function compile(config, gulp, watch) {
 function build(done, config, gulp, watch) {
   console.log('why');
   _gulp.series(
-    // () => config.lint ? lint(config, gulp, watch) : null,
+    () => lint(config, gulp, watch),
     () => config.bundle ?
       compileBundle(config, watch) :
       compile(config, gulp, watch)
