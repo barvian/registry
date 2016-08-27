@@ -116,7 +116,7 @@ function compile(config, gulp, watch) {
 function build(done, config, gulp, watch) {
   console.log('why');
   _gulp.series(
-    () => config.lint ? lint(config, gulp, watch) : null,
+    // () => config.lint ? lint(config, gulp, watch) : null,
     () => config.bundle ?
       compileBundle(config, watch) :
       compile(config, gulp, watch)
