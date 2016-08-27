@@ -62,7 +62,7 @@ lint.description = 'Lint scripts';
 // -----
 
 function compileBundle(config, watch) {
-  let bundler = browserify(config.src, {debug: false})
+  let bundler = browserify(config.src, {debug: true})
     .transform(babelify)
     .transform(debowerify)
     .transform(browserifyData);
