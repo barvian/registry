@@ -11,6 +11,7 @@ const babel = require('gulp-babel');
 const eslint = require('gulp-eslint');
 const htmlExtract = require('gulp-html-extract');
 const crisper = require('gulp-crisper');
+const plumber = require('gulp-plumber');
 const browserify = require('browserify');
 const watchify = require('watchify');
 const babelify = require('babelify');
@@ -62,16 +63,16 @@ lint.description = 'Lint scripts';
 // -----
 
 function compileBundle(config, watch) {
-  let bundler = browserify(config.src, {debug: true})
+  let bundler = browserify(config.src, {debug: false})
     .transform(babelify)
     .transform(debowerify)
     .transform(browserifyData);
 
   const rebundle = function() {
-    let minifyPipe = lazypipe()
-      .pipe(() => gulpif(config.sourcemaps, sourcemaps.init()))
-      .pipe(uglify, config.uglify)
-      .pipe(() => gulpif(config.sourcemaps, sourcemaps.write('.')));
+    // let minifyPipe = lazypipe()
+    //   .pipe(() => gulpif(config.sourcemaps, sourcemaps.init()))
+    //   .pipe(uglify, config.uglify)
+    //   .pipe(() => gulpif(config.sourcemaps, sourcemaps.write('.')));
 
     return bundler.bundle()
       .on('error', function(err) {
@@ -80,7 +81,7 @@ function compileBundle(config, watch) {
       })
       .pipe(source(config.bundle))
       .pipe(buffer())
-      .pipe(gulpif(config.minify, minifyPipe()))
+      // .pipe(gulpif(config.minify, minifyPipe()))
       .pipe(multidest(config.dest))
       .pipe(gulpif(watch, browserSync.stream()));
   };
