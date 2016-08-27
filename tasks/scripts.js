@@ -63,16 +63,16 @@ lint.description = 'Lint scripts';
 // -----
 
 function compileBundle(config, watch) {
-  let bundler = browserify(config.src, {debug: false})
-    .transform(babelify)
-    .transform(debowerify)
-    .transform(browserifyData);
+  let bundler = browserify(config.src, {debug: true})
+    .transform(babelify);
+    // .transform(debowerify)
+    // .transform(browserifyData);
 
   const rebundle = function() {
-    // let minifyPipe = lazypipe()
-    //   .pipe(() => gulpif(config.sourcemaps, sourcemaps.init()))
-    //   .pipe(uglify, config.uglify)
-    //   .pipe(() => gulpif(config.sourcemaps, sourcemaps.write('.')));
+    let minifyPipe = lazypipe()
+      .pipe(() => gulpif(config.sourcemaps, sourcemaps.init()))
+      .pipe(uglify, config.uglify)
+      .pipe(() => gulpif(config.sourcemaps, sourcemaps.write('.')));
 
     return bundler.bundle()
       .on('error', function(err) {
