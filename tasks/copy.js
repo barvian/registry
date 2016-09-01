@@ -19,9 +19,9 @@ function build(config, gulp) {
     config.src, config.base ? {
       base: config.base,
       cwd: config.base,
-      dot: true,
-      since: gulp.lastRun('copy:build')
-    } : {since: gulp.lastRun('copy:build')})
+      dot: true/*,
+      since: gulp.lastRun('copy:build')*/
+    } : {/*since: gulp.lastRun('copy:build')*/})
     .pipe(multidest(config.dest))
     .pipe(stream());
 }
